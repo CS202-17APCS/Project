@@ -1,0 +1,21 @@
+First level:
++CObject:
+  -private:
+       +set left,set right 
+  -collide(check isimpacted)
+  -moveObject()
++CPEOPLE(tung)
+  -private:
+      +state( impacted)
+       +current floor?(to check if people have finished the level yet)
++CANIMAL:CBIRD,CDINOSAUR(inheritance from Object)(thu)
++CVEHICLE:CCAR,CTRUCK(tam)
+CPEOPLE is impacted by CANIMAL AND CVEHICLE(what do you mean by impacted?same coordinate)
+BIGCGAME function:
++initialize game(load game from file)
++getdata(CPEOPLE,CANIMAL,CVEHICLE)
++rungame
++endgame
+Seminar:
++Strategy (Van,Thu)
++Decorator(Tam,Tung)
