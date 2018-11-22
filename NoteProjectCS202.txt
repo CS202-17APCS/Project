@@ -2,6 +2,7 @@ First level:
 +CObject:
   -private:
        +set left,set right 
+       +set up,set down
   -collide(check isimpacted)
   -moveObject()
 +CPEOPLE(tung)
