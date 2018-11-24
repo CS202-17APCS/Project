@@ -1,7 +1,7 @@
 #include "Object.h"
 
-const string CDINOSAUR_SOUND_FILE = "";
-const string CBIRD_SOUND_FILE = "";
+const string CDINOSAUR_SOUND_FILE = "sounds/dinosaur0.wav";
+const string CBIRD_SOUND_FILE = "sounds/raven0.wav";
 
 class CANIMAL :public CObject {
 public:
@@ -51,7 +51,7 @@ public:
 		CANIMAL::GoLeft();
 	}
 	void playSound() {
-		loadSound("dinosaur0.wav");
+		loadSound(CDINOSAUR_SOUND_FILE);
 	}
 
 private:
@@ -79,7 +79,7 @@ public:
 	}
 
 	void playSound() {
-		loadSound("raven0.wav");
+		loadSound(CBIRD_SOUND_FILE);
 	}
 private:
 	void DBIRD();//drawing BIRD
