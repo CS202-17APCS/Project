@@ -1,4 +1,8 @@
 #include "Object.h"
+
+const string CDINOSAUR_SOUND_FILE = "";
+const string CBIRD_SOUND_FILE = "";
+
 class CANIMAL :public CObject {
 public:
 	CANIMAL(int up, int down, int left, int right) :CObject(up, down, left, right) {
@@ -21,6 +25,7 @@ public:
 	int getSize() {
 		return Num;
 	}
+
 private:
 	int Num;//numberofanimals
 };
@@ -45,6 +50,10 @@ public:
 	{
 		CANIMAL::GoLeft();
 	}
+	void playSound() {
+		loadSound("dinosaur0.wav");
+	}
+
 private:
 	void DDINOSAUR();//drawing DINOSAUR
 };
@@ -67,6 +76,10 @@ public:
 	void GoLeft()
 	{
 		CANIMAL::GoLeft();
+	}
+
+	void playSound() {
+		loadSound("raven0.wav");
 	}
 private:
 	void DBIRD();//drawing BIRD
