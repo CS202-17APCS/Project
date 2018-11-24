@@ -1,6 +1,8 @@
 #include <iostream>
 #include <Windows.h>
+#include "Utils.h"
 using namespace std;
+
 class CObject {
 private:
 	int SetLeft;//Left Position Of Object
@@ -41,4 +43,5 @@ public:
 			return false;
 		return true;
 	}
+	virtual void playSound();
 };
