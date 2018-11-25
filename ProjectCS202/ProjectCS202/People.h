@@ -2,15 +2,30 @@
 #include "Object.h"
 #include "Animal.h"
 #include "Vehicle.h"
+#include "Game.h"
 class CPEOPLE :public CObject {
 private:
 	bool mState;//isDead
-	int Floor;//Where?
 public:
-	void Up(int) { CObject::GoUp(); }
-	void Left(int) { CObject::GoLeft(); }
-	void Right(int) { CObject::GoRight(); }
-	void Down(int) { CObject::GoDown(); }
+	CPEOPLE(int up, int down, int left, int right) :CObject(up, down, left, right) {
+		mState = false;
+	}
+	void Up() { 
+	
+		CObject::GoUp(); 
+	}
+	void Left() { 
+		if (CObject::left() > LeftEdge)
+		 CObject::GoLeft(); 
+	}
+	void Right() { 
+		if (CObject::right() < RightEdge)
+			CObject::GoRight();
+	}
+	void Down() { 
+		if(CObject::down()>BelowEdge)
+		  CObject::GoDown(); 
+	}
 	bool imPact(const CVEHICLE*& C)
 	{
 		//NumOfVE=15
@@ -31,6 +46,15 @@ public:
 		}
 		return false;
 	}
-	bool isFinish();//Go to next level
+	bool isFinish(int tmpfloor)//Go to next level
+	{
+		if (CObject::floor() == tmpfloor)
+			return true;
+		return false;
+	}
 	bool isDead() { return mState; }
+	int Peofloor()
+	{
+		return CObject::floor();
+	}
 };

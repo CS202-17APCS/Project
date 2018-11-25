@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <Windows.h>
 #include "Utils.h"
@@ -9,6 +10,7 @@ private:
 	int SetRight;//Right Position Of Object
 	int SetUp;
 	int SetDown;
+	int Curfloor;//Current floor of Object
 public:
 	CObject() = default;
 	CObject(int up, int down, int left, int right)
@@ -44,4 +46,19 @@ public:
 		return true;
 	}
 	virtual void playSound();
+	//must modify below functions
+	int floor()
+	{
+		return Curfloor;
+	}
+	int left() {
+		return SetLeft;
+	}
+	int right()
+	{
+		return SetRight;
+	}
+	int down(){
+		return SetDown;
+	}//
 };
