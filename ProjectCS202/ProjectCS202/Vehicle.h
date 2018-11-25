@@ -32,7 +32,7 @@ public:
 	}
 	CTRUCK() = default;
 	~CTRUCK();
-	bool isCollide(const CPEOPLE &tmp)
+	bool isCollide(const CObject &tmp)
 	{
 		return CVEHICLE::isCollide(tmp);
 	}
@@ -54,7 +54,7 @@ public:
 	}
 	CCAR() = default;
 	~CCAR();
-	bool isCollide(const CPEOPLE &tmp)
+	bool isCollide(const CObject &tmp)
 	{
 		return CVEHICLE::isCollide(tmp);
 	}
