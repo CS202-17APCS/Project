@@ -26,22 +26,22 @@ public:
 		if(CObject::down()>BelowEdge)
 		  CObject::GoDown(); 
 	}
-	bool imPact(const CVEHICLE*& C)
+	bool imPact(vector<CVEHICLE*> tmp)
 	{
 		//NumOfVE=15
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < tmp.size(); i++)
 		{
-			if (isCollide(C[i]))
+			if (tmp[i]->isCollide(*this))
 				return true;
 		}
 		return false;
 	}
-	bool isImpact(const CANIMAL*& A)
+	bool isImpact(vector<CANIMAL*> tmp)
 	{
 		//NumOfAni=15
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < tmp.size(); i++)
 		{
-			if (isCollide(A[i]))
+			if (tmp[i]->isCollide(*this))
 				return true;
 		}
 		return false;
