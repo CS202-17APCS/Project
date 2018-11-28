@@ -1,85 +1,102 @@
 #include <iostream>
-#include <string>
+
 using namespace std;
-class Object {
-public:
-	virtual void print() = 0;
-private:
-};
-class NormalIceCream :public Object {
-public :
-	void print() {
-		cout << "Normal Ice Cream with";
-	}
-private:
-};
-class AbsIngredient :public Object {
-public:
-	AbsIngredient(Object *tmpthings)
-	{
-		things = tmpthings;
-	}
-	virtual void print()
-	{
-		things->print();
-	}
-private:
-	Object * things;
-};
-class Apple :public AbsIngredient {
-public:
-	Apple(Object*tmpthings) :AbsIngredient(tmpthings) {
 
-	}
-	void print()
-	{
-		AbsIngredient::print();
-		cout << " apple,";
-	}
-private:
-};
-class Pineapple :public AbsIngredient {
-public:
-	Pineapple(Object*tmpthings) :AbsIngredient(tmpthings)
-	{
+class Food {
+    // This is the interface for the Decorator Pattern design
+    private:
 
-	}
-	void print()
-	{
-		AbsIngredient::print();
-		cout << " pineapple,";
-	}
-private:
+    public:
+        virtual void print() = 0;
 };
-class Pudding :public AbsIngredient {
-public:
-	Pudding(Object *tmpthings) :AbsIngredient(tmpthings)
-	{
 
-	}
-	void print()
-	{
-		AbsIngredient::print();
-		cout << " pudding,";
-	}
+class IceCream :public Food {
+    // This the core functionality class
+    private:
+        int size;
+
+    public :
+        IceCream(int creamSize) : size(creamSize) {}
+
+        void print() {
+            cout << "Ice Cream with size " << size << endl;
+        }
 };
+
+class Ingredient : public Food {
+    // This is the Wrapper for the optional functionality
+    private:
+        Food* things;
+
+    public:
+        Ingredient(Food *food)
+        {
+            things = food;
+        }
+
+        virtual void print()
+        {
+            things->print();
+        }
+};
+
+class Apple :public Ingredient {
+    // Concrete Optional Functionality
+    private:
+
+    public:
+        Apple(Food* food) :Ingredient(food) {}
+
+        void print()
+        {
+            Ingredient::print();
+            cout << "\t Add On: Apple" << endl;
+        }
+};
+
+class Pineapple :public Ingredient {
+    // Concrete Optional Functionality
+    private:
+
+    public:
+        Pineapple(Food* food) :Ingredient(food){}
+        void print()
+        {
+            Ingredient::print();
+            cout << "\t Add On: Pineapple" << endl;
+        }
+};
+
+class Pudding :public Ingredient {
+    // Concrete Optional Functionality
+    private:
+
+    public:
+        Pudding(Food *food) :Ingredient(food){}
+        void print()
+        {
+            Ingredient::print();
+            cout << "\t Add On: Pudding" << endl;
+        }
+};
+
+
 int main()
-{
-	Object *Customer1;
-	Customer1 = new Pudding(new Pineapple(new Apple(new NormalIceCream)));//Icecream with ingredients:apple,pineapple,pudding
-	Object *Customer2;
-	Customer2 = new NormalIceCream;//Normal Icecream
-	Object *Customer3;
-	Customer3 = new Pudding(new NormalIceCream);//Icecream with pudding
-	Customer1->print();
-	cout << endl;
-	Customer2->print();
-	cout << endl;
-	Customer3->print();
-	cout << endl;
-	Object *Customer4;
-	Customer4 = new Pineapple(new Apple(new NormalIceCream));
-	Customer4->print();
-	system("pause");
+{	
+    //Normal Icecream
+    Food *Customer1 = new IceCream(10);
+    //Icecream with pudding
+    Food *Customer2 = new Pudding(new IceCream(20));
+    //Icecream with ingredients:apple,pineapple,pudding
+    Food *Customer3 = new Pudding(new Pineapple(new Apple(new IceCream(30))));
+    //Icecream with pineapple and appple
+    Food *Customer4 = new Pineapple(new Apple(new IceCream(40)));
+
+    Customer1->print();
+    Customer2->print();
+    Customer3->print();
+    Customer4->print();
+    // Uncomment only when working on Visual Studio
+    //system("pause");
 
 }
