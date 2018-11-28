@@ -1,50 +1,64 @@
 #include <iostream>
+
 using namespace std;
-class Object {
-public:
-	virtual void dosth() = 0;
+
+class IceCream {
+    private:
+        int size;
+    public:
+        IceCream(int creamSize) : size(creamSize) {}
+        void print() {
+            cout << "Ice Cream with size " << size << endl;
+        }
 };
-class NormalIceCream :public Object {
-public:
-	void dosth()
-	{
-		cout << "This is normal Ice cream" << endl;
-	}
+class IceCreamWithPudding :public IceCream {
+    private:
+
+    public:
+        IceCreamWithPudding(int size) : IceCream(size){}
+        void print(){
+            IceCream::print();
+            cout << "\t Addon: Pudding" << endl;
+        }
 };
-class IceCreamwithpudding :public Object {
-public:
-	void dosth()
-	{
-		cout << "This is Ice cream with pudding" << endl;
-	}
+class IceCreamWithApple :public IceCream{
+    private:
+
+    public:
+        IceCreamWithApple(int size) : IceCream(size) {}
+        void print() {
+            IceCream::print();
+            cout << "\t Addon: Apple" << endl;
+        }
 };
-class IceCreamwithapple :public Object {
-public:
-	void dosth()
-	{
-		cout << "This is Ice cream with apple" << endl;
-	}
-};
-class IceCreamwithPudandAp :public Object {
-public:
-	void dosth()
-	{
-		cout << "This is Ice cream with pudding and apple" << endl;
-	}
+class IceCreamWithPuddingAndApple :public IceCream{
+    private:
+
+    public:
+        IceCreamWithPuddingAndApple(int size) : IceCream(size) {}
+        void print() {
+            IceCream::print();
+            cout << "\t Addon: Apple" << endl;
+            cout << "\t Addon: Pudding" << endl;
+        }
 };
 int main()
 {
-	Object* cus1;
-	cus1 = new NormalIceCream;
-	Object* cus2;
-	cus2 = new IceCreamwithpudding;
-	Object* cus3;
-	cus3 = new IceCreamwithapple;
-	Object * cus4;
-	cus4 = new IceCreamwithPudandAp;
-	cus1->dosth();
-	cus2->dosth();
-	cus3->dosth();
-	cus4->dosth();
-	system("pause");
+    // Normal Ice Cream
+    IceCream customer1(10);
+    // Ice Cream with Pudding add on
+    IceCreamWithPudding customer2(20);
+    // Ice Cream with Apple add on
+    IceCreamWithApple customer3(30);
+    // Ice Cream with Apple and Pudding add on
+    IceCreamWithPuddingAndApple customer4(40);
+
+    // Print information of each cream
+    customer1.print();
+    customer2.print();
+    customer3.print();
+    customer4.print();
+    // Uncomment if runs on Visual Studio
+    //system("pause");
+    return 0;
 }
