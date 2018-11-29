@@ -13,12 +13,13 @@ private:
 	int Curfloor;//Current floor of Object
 public:
 	CObject() = default;
-	CObject(int up, int down, int left, int right)
+	CObject(int up, int down, int left, int right,int tmpfloor)
 	{
 		SetLeft = left;
 		SetRight = right;
 		SetUp = up;
 		SetDown = down;
+		Curfloor = tmpfloor;
 	}
 	~CObject();
 	virtual void GoUp()
@@ -27,7 +28,7 @@ public:
 	}
 	virtual void GoDown()
 	{
-		SetDown++;
+		SetDown--;
 	}
 	virtual void GoRight()
 	{
@@ -35,7 +36,7 @@ public:
 	}
 	virtual void GoLeft()
 	{
-		SetLeft++;
+		SetLeft--;
 	}
 	virtual bool isCollide(const CObject &tmp)
 	{

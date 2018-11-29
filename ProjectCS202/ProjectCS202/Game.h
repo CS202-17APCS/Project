@@ -4,15 +4,16 @@
 #include "Vehicle.h"
 #include <vector>
 #include <string>
-//Any level will have 12 floors
-const int maxfloors = 12;
+#include <conio.h>
+//Any level will have 6 floors
+const int maxfloors = 6;
 //Set position for people 
 const int UpPEOPLE = 0;//starting position
 const int DownPEOPLE = 0;
 const int LeftPEOPLE = 0;
 const int RightPEOPLE = 0;
-const int NumOfVe = 15;//set number of vehicle in a specific level
-const int NumOfAni = 15;//set num of animal in a specific level
+const int NumOfVe = 0;//set number of vehicle in a specific level
+const int NumOfAni = 0;//set num of animal in a specific level
 const int LeftEdge = 0;//Set left postion of game's screen
 const int RightEdge = 0;//Set right postion ....
 const int UpEdge = 0;//set up...
@@ -21,28 +22,18 @@ const int LengthOb = 0;//set length of pix of an object(horizontal axis)
 const int Height = 0;//set heigth of an object(vertical axis)
 const int WidthEdge = 0;//set width between two rows
 class CGAME {
-	vector<CVEHICLE*> VE[5];
-	vector<CANIMAL*> ANI[5];
+	vector<CVEHICLE*> VE[2];
+	vector<CANIMAL*> ANI[2];
 	CPEOPLE PEOPLE;
-	int Curlevel;
+	int Curlevel;//6 levels for a game
 public:
 	CGAME();
 	void drawGame();
-	bool IncLevel()//increasing currentlevel and check if people have completed the game
-	{
-		if (Curlevel == 6)
-		{
-			//ENDGAME
-			return true;
-		}
-		else
-		{
-			Curlevel++;
-			//drawing a new screen for next level
-			return false;
-		}
-	}
 	~CGAME();
+	bool FinishGame()//Check whether game is finished or not
+	{
+		return Curlevel == 6;
+	}
 	void getPeopleFile();//load game
 	void getAnimalFile();//load game
 	void getVehicleFile();//load game
@@ -52,41 +43,73 @@ public:
 	}
 	void getVehicleByDefault()//New game
 	{
-		int Distance = 0;
+		int Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / Curlevel ;
+		if (Curlevel != 1)
+			Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / (Curlevel - 1);
 		for (int i = 1; i < maxfloors-1; i+=2)
 		{
 			int startPos = LeftEdge;
-			while (startPos + LengthOb <= RightEdge)
+			for(int j=0;j<Curlevel;j++)
 			{
-				CVEHICLE *tmp = new CCAR(BelowEdge + i * Height + Height, BelowEdge + i * Height, startPos, startPos + LengthOb);
+				CVEHICLE *tmp = new CCAR(BelowEdge + i * Height + Height, BelowEdge + i * Height, startPos, startPos + LengthOb,i+1);
 				VE[i].push_back(tmp);
 				delete tmp;
-				startPos += Distance;//startpos+=distance
+				startPos =startPos+LengthOb+Distance;//startpos+=distance
+				if (startPos >= RightEdge)
+					break;
 			}
 		}
 	}
 	void getAnimalByDefault()//New game
 	{
-		int Distance = 0;
-		for (int i = 2; i < maxfloors-1; i += 2)
+		int Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / Curlevel;
+		if (Curlevel != 1)
+			Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / (Curlevel - 1);
+		for (int i = 1; i < maxfloors - 1; i += 2)
 		{
 			int startPos = RightEdge;
-			while (startPos - LengthOb >= LeftEdge)
+			for (int j = 0; j<Curlevel; j++)
 			{
-				CANIMAL *tmp = new CBIRD(BelowEdge + i * Height + Height, BelowEdge + i * Height, startPos-LengthOb, startPos);
+				CANIMAL *tmp = new CBIRD(BelowEdge + i * Height + Height, BelowEdge + i * Height, startPos-LengthOb, startPos,i+1);
 				ANI[i].push_back(tmp);
 				delete tmp;
-				startPos -= Distance;//startpos-=distance
+				startPos = startPos - LengthOb - Distance;//startpos+=distance
+				if (startPos <= LeftEdge)
+					break;
 			}
 		}
 	}
-	void resetGame();
+	void resetGame()
+	{
+		//delete all and set default again
+	}
 	void exitGame(HANDLE);
-	void startGame();
+	void startGame()
+	{
+		//Check Button
+		//Preparing database for game
+		getPeopleByDefault();
+		getAnimalByDefault();
+		getVehicleByDefault();
+	    //drawing game
+	}
 	void loadGame(istream);
 	void saveGame(istream);
-	void pauseGame(HANDLE);
-	void resumeGame(HANDLE);
+	void pauseGame(HANDLE key)
+	{
+		if (key == "p" || key == "P")
+			resumeGame();//waiting for user to enter P
+		//After pressing p go on printing out the console
+	}
+	void resumeGame()
+	{
+		char c = _getch();
+		while (c != 'P' &&c != 'p')
+		{
+			c = _getch();
+		}
+		//After pressing p go on printing out the console
+	}
 	void updatePosPeople(char c)
 	{
 		if (c == 'W')
@@ -94,6 +117,15 @@ public:
 			if (PEOPLE.isFinish(maxfloors))
 			{
 				//go to next level
+				if (FinishGame())
+				{
+					//finish game
+				}
+				else
+				{
+					Curlevel++;
+				    //Drawing game again with new parameters
+				}
 			}
 			else
 			{
@@ -102,15 +134,15 @@ public:
 		}
 		else if (c == 'A')
 		{
-			PEOPLE.GoLeft();
+			PEOPLE.Left();
 		}
 		else if (c == 'S')
 		{
-			PEOPLE.GoDown();
+			PEOPLE.Down();
 		}
 		else if (c == 'D')
 		{
-			PEOPLE.GoRight();
+			PEOPLE.Right();
 		}
 	}
 	void updatePosVehicle()

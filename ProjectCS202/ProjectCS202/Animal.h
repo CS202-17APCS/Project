@@ -5,7 +5,7 @@ const string CBIRD_SOUND_FILE = "sounds/raven0.wav";
 
 class CANIMAL :public CObject {
 public:
-	CANIMAL(int up, int down, int left, int right) :CObject(up, down, left, right) {
+	CANIMAL(int up, int down, int left, int right,int tmpfloor) :CObject(up, down, left, right,tmpfloor) {
 
 	}
 	CANIMAL() = default;
@@ -33,7 +33,7 @@ private:
 
 class CDINOSAUR :public CANIMAL {
 public:
-	CDINOSAUR(int up, int down, int left, int right) :CANIMAL(up, down, left, right) {
+	CDINOSAUR(int up, int down, int left, int right,int tmpfloor) :CANIMAL(up, down, left, right,tmpfloor) {
 
 	}
 	CDINOSAUR() = default;
@@ -60,7 +60,7 @@ private:
 
 class CBIRD :public CANIMAL {
 public:
-	CBIRD(int up, int down, int left, int right) :CANIMAL(up, down, left, right) {
+	CBIRD(int up, int down, int left, int right,int tmpfloor) :CANIMAL(up, down, left, right,tmpfloor) {
 
 	}
 	CBIRD() = default;

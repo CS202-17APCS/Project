@@ -2,7 +2,7 @@
 #include "People.h"
 class CVEHICLE :public CObject {
 public:
-	CVEHICLE(int up,int down,int left,int right):CObject(up,down,left,right) {
+	CVEHICLE(int up,int down,int left,int right,int tmpfloor):CObject(up,down,left,right,tmpfloor) {
 
 	}
 	CVEHICLE() = default;
@@ -27,7 +27,7 @@ private:
 };
 class CTRUCK :public CVEHICLE {
 public:
-	CTRUCK(int up,int down,int left,int right):CVEHICLE(up,down,left,right) {
+	CTRUCK(int up,int down,int left,int right,int tmpfloor):CVEHICLE(up,down,left,right,tmpfloor) {
 
 	}
 	CTRUCK() = default;
@@ -49,7 +49,7 @@ private:
 };
 class CCAR :public CVEHICLE {
 public:
-	CCAR(int up, int down, int left, int right) :CVEHICLE(up, down, left, right) {
+	CCAR(int up, int down, int left, int right,int tmpfloor) :CVEHICLE(up, down, left, right,tmpfloor) {
 
 	}
 	CCAR() = default;
