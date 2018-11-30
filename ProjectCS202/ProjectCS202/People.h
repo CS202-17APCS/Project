@@ -1,30 +1,29 @@
-#pragma once
-#include "Object.h"
+#ifndef _People_
+#define _People_
+#include "LibraryPro.h"
 #include "Animal.h"
 #include "Vehicle.h"
-#include "Game.h"
+#include "Object.h"
+//Animal
 class CPEOPLE :public CObject {
 private:
 	bool mState;//isDead
 public:
-	CPEOPLE(int up, int down, int left, int right) :CObject(up, down, left, right) {
+	CPEOPLE() = default;
+	CPEOPLE(int up, int down, int left, int right, int tmpfloor) :CObject(up, down, left, right, tmpfloor) {
 		mState = false;
 	}
-	void Up() { 
-	
-		CObject::GoUp(); 
+	bool GoUp() {
+		return CObject::GoUp();
 	}
-	void Left() { 
-		if (CObject::left() > LeftEdge)
-		 CObject::GoLeft(); 
+	bool GoLeft() {
+		return CObject::GoLeft();
 	}
-	void Right() { 
-		if (CObject::right() < RightEdge)
-			CObject::GoRight();
+	bool GoRight() {
+		return CObject::GoRight();
 	}
-	void Down() { 
-		if(CObject::down()>BelowEdge)
-		  CObject::GoDown(); 
+	bool  GoDown() {
+		return CObject::GoDown();
 	}
 	bool imPact(vector<CVEHICLE*> tmp)
 	{
@@ -48,13 +47,9 @@ public:
 	}
 	bool isFinish(int tmpfloor)//Go to next level
 	{
-		if (CObject::floor() == tmpfloor)
-			return true;
-		return false;
+		return CObject::checkFinish(tmpfloor);
 	}
 	bool isDead() { return mState; }
-	int Peofloor()
-	{
-		return CObject::floor();
-	}
 };
+#endif
+

@@ -1,26 +1,25 @@
 #include "Object.h"
-
+#include <string>
 const string CDINOSAUR_SOUND_FILE = "sounds/dinosaur0.wav";
 const string CBIRD_SOUND_FILE = "sounds/raven0.wav";
-
+class CANIMAL;
+class CVEHICLE;
 class CANIMAL :public CObject {
 public:
-	CANIMAL(int up, int down, int left, int right,int tmpfloor) :CObject(up, down, left, right,tmpfloor) {
-
+	CANIMAL(int up, int down, int left, int right, int tmpfloor) :CObject(up, down, left, right, tmpfloor) {
 	}
 	CANIMAL() = default;
-	~CANIMAL();
-	virtual bool isCollide(const CPEOPLE &tmp)
+	~CANIMAL()
 	{
-		return CObject::isCollide(tmp);
+
 	}
-	virtual void GoRight()
+	virtual bool GoRight()
 	{
-		CObject::GoRight();
+		return CObject::GoRight();
 	}
-	virtual void GoLeft()
+	virtual bool GoLeft()
 	{
-		CObject::GoLeft();
+		return CObject::GoLeft();
 	}
 	int getSize() {
 		return Num;
@@ -29,29 +28,23 @@ public:
 private:
 	int Num;//numberofanimals
 };
-
-
 class CDINOSAUR :public CANIMAL {
 public:
-	CDINOSAUR(int up, int down, int left, int right,int tmpfloor) :CANIMAL(up, down, left, right,tmpfloor) {
+	CDINOSAUR(int up, int down, int left, int right, int tmpfloor) :CANIMAL(up, down, left, right, tmpfloor) {
 
 	}
 	CDINOSAUR() = default;
 	~CDINOSAUR();
-	bool isCollide(const CPEOPLE &tmp)
+	bool GoRight()
 	{
-		return CANIMAL::isCollide(tmp);
+		return CANIMAL::GoRight();
 	}
-	void GoRight()
+	bool GoLeft()
 	{
-		CANIMAL::GoRight();
-	}
-	void GoLeft()
-	{
-		CANIMAL::GoLeft();
+		return CANIMAL::GoLeft();
 	}
 	void playSound() {
-		loadSound(CDINOSAUR_SOUND_FILE);
+		//loadSound(CDINOSAUR_SOUND_FILE);
 	}
 
 private:
@@ -60,27 +53,23 @@ private:
 
 class CBIRD :public CANIMAL {
 public:
-	CBIRD(int up, int down, int left, int right,int tmpfloor) :CANIMAL(up, down, left, right,tmpfloor) {
+	CBIRD(int up, int down, int left, int right, int tmpfloor) :CANIMAL(up, down, left, right, tmpfloor) {
 
 	}
 	CBIRD() = default;
 	~CBIRD();
-	bool isCollide(const CPEOPLE &tmp)
+	bool GoRight()
 	{
-		return CANIMAL::isCollide(tmp);
+		return CANIMAL::GoRight();
 	}
-	void GoRight()
+	bool GoLeft()
 	{
-		CANIMAL::GoRight();
-	}
-	void GoLeft()
-	{
-		CANIMAL::GoLeft();
+		return CANIMAL::GoLeft();
 	}
 
-	void playSound() {
+	/*void playSound() {
 		loadSound(CBIRD_SOUND_FILE);
-	}
+	}*/
 private:
 	void DBIRD();//drawing BIRD
 };

@@ -1,9 +1,6 @@
-#pragma once
-#include <iostream>
-#include <Windows.h>
-#include "Utils.h"
+#ifndef _Object_
+#define _Object_
 using namespace std;
-
 class CObject {
 private:
 	int SetLeft;//Left Position Of Object
@@ -21,22 +18,49 @@ public:
 		SetDown = down;
 		Curfloor = tmpfloor;
 	}
-	~CObject();
-	virtual void GoUp()
+	~CObject()
 	{
-		SetUp++;
+
 	}
-	virtual void GoDown()
+	virtual bool GoUp()//Return true when people can go up and false...
 	{
-		SetDown--;
+		if (Curfloor != 6)
+		{
+			SetUp += Height;
+			SetDown += Height;
+			Curfloor++;
+			return true;
+		}
+		return false;
 	}
-	virtual void GoRight()
+	virtual bool GoDown()
 	{
-		SetRight++;
+		if (Curfloor != 1)
+		{
+			SetUp -= Height;
+			SetDown -= Height;
+			Curfloor--;
+			return true;
+		}
+		return false;
 	}
-	virtual void GoLeft()
+	virtual bool GoRight()
 	{
-		SetLeft--;
+		if (SetRight != RightEdge)
+		{
+			SetRight++;
+			return true;
+		}
+		return false;
+	}
+	virtual bool GoLeft()
+	{
+		if (SetLeft != LeftEdge)
+		{
+			SetLeft--;
+			return true;
+		}
+		return false;
 	}
 	virtual bool isCollide(const CObject &tmp)
 	{
@@ -46,20 +70,11 @@ public:
 			return false;
 		return true;
 	}
-	virtual void playSound();
+	//virtual void playSound();
+	bool checkFinish(int maxfloor)
+	{
+		return Curfloor == maxfloor;
+	}
 	//must modify below functions
-	int floor()
-	{
-		return Curfloor;
-	}
-	int left() {
-		return SetLeft;
-	}
-	int right()
-	{
-		return SetRight;
-	}
-	int down(){
-		return SetDown;
-	}//
 };
+#endif

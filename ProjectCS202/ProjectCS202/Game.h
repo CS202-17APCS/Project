@@ -1,35 +1,28 @@
+#ifndef _Game_
+#define _Game_
+#include "LibraryPro.h"
 #include "Object.h"
-#include "Animal.h"
 #include "People.h"
-#include "Vehicle.h"
-#include <vector>
-#include <string>
-#include <conio.h>
-//Any level will have 6 floors
-const int maxfloors = 6;
-//Set position for people 
-const int UpPEOPLE = 0;//starting position
-const int DownPEOPLE = 0;
-const int LeftPEOPLE = 0;
-const int RightPEOPLE = 0;
-const int NumOfVe = 0;//set number of vehicle in a specific level
-const int NumOfAni = 0;//set num of animal in a specific level
-const int LeftEdge = 0;//Set left postion of game's screen
-const int RightEdge = 0;//Set right postion ....
-const int UpEdge = 0;//set up...
-const int BelowEdge = 0;//set down...
-const int LengthOb = 0;//set length of pix of an object(horizontal axis)
-const int Height = 0;//set heigth of an object(vertical axis)
-const int WidthEdge = 0;//set width between two rows
+#include "Drawing.h"
 class CGAME {
 	vector<CVEHICLE*> VE[2];
 	vector<CANIMAL*> ANI[2];
 	CPEOPLE PEOPLE;
 	int Curlevel;//6 levels for a game
 public:
-	CGAME();
-	void drawGame();
-	~CGAME();
+	CGAME()
+	{
+
+	}
+	void drawGame()
+	{
+		drawdog(0, 35);
+		drawcar(0, 25);
+		drawdog(0, 15);
+		drawcar(0, 5);
+		system("pause");
+	}
+	~CGAME() {};
 	bool FinishGame()//Check whether game is finished or not
 	{
 		return Curlevel == 6;
@@ -39,7 +32,7 @@ public:
 	void getVehicleFile();//load game
 	void getPeopleByDefault()//New game
 	{
-		PEOPLE=CPEOPLE(UpPEOPLE, DownPEOPLE, LeftPEOPLE, RightPEOPLE);//please change the coordinate of people
+		PEOPLE=CPEOPLE(UpPEOPLE, DownPEOPLE, LeftPEOPLE, RightPEOPLE,1);//please change the coordinate of people
 	}
 	void getVehicleByDefault()//New game
 	{
@@ -114,35 +107,30 @@ public:
 	{
 		if (c == 'W')
 		{
-			if (PEOPLE.isFinish(maxfloors))
+			if (Curlevel == 6)
 			{
-				//go to next level
-				if (FinishGame())
-				{
-					//finish game
-				}
-				else
-				{
-					Curlevel++;
-				    //Drawing game again with new parameters
-				}
+				//Finish game
 			}
 			else
 			{
-				PEOPLE.GoUp();
+				if (PEOPLE.GoUp() == false)//Standing on the maximum floor
+				{
+					//Go to next level
+					Curlevel++;
+				}
 			}
 		}
 		else if (c == 'A')
 		{
-			PEOPLE.Left();
+			bool checkLeft = PEOPLE.GoLeft();//creating bool variables just for checking for later problem . People will go to the left 
 		}
 		else if (c == 'S')
 		{
-			PEOPLE.Down();
+			bool checkDown = PEOPLE.GoDown();
 		}
 		else if (c == 'D')
 		{
-			PEOPLE.Right();
+			bool checkRight = PEOPLE.GoDown();
 		}
 	}
 	void updatePosVehicle()
@@ -166,4 +154,5 @@ public:
 		}
 	}
 };
+#endif
 

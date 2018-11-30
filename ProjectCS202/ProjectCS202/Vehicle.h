@@ -1,23 +1,21 @@
 #include "Object.h"
-#include "People.h"
 class CVEHICLE :public CObject {
 public:
-	CVEHICLE(int up,int down,int left,int right,int tmpfloor):CObject(up,down,left,right,tmpfloor) {
+	CVEHICLE(int up, int down, int left, int right, int tmpfloor) :CObject(up, down, left, right, tmpfloor) {
 
 	}
 	CVEHICLE() = default;
-	~CVEHICLE();
-	virtual bool isCollide(const CPEOPLE &tmp)
+	~CVEHICLE()
 	{
-		return CObject::isCollide(tmp);
+
+	};
+	virtual bool GoRight()
+	{
+		return CObject::GoRight();
 	}
-	virtual void GoRight()
+	virtual bool GoLeft()
 	{
-		CObject::GoRight();
-	}
-	virtual void GoLeft()
-	{
-		CObject::GoLeft();
+		return CObject::GoLeft();
 	}
 	int getSize() {
 		return Num;
@@ -27,44 +25,39 @@ private:
 };
 class CTRUCK :public CVEHICLE {
 public:
-	CTRUCK(int up,int down,int left,int right,int tmpfloor):CVEHICLE(up,down,left,right,tmpfloor) {
+	CTRUCK(int up, int down, int left, int right, int tmpfloor) :CVEHICLE(up, down, left, right, tmpfloor) {
 
 	}
 	CTRUCK() = default;
 	~CTRUCK();
-	bool isCollide(const CPEOPLE &tmp)
+	bool GoRight()
 	{
-		return CVEHICLE::isCollide(tmp);
+		return CVEHICLE::GoRight();
 	}
-	void GoRight()
+	bool GoLeft()
 	{
-		CVEHICLE::GoRight();
-	}
-	void GoLeft()
-	{
-		CVEHICLE::GoLeft();
+		return CVEHICLE::GoLeft();
 	}
 private:
 	void DTRUCK();//drawing truck
 };
 class CCAR :public CVEHICLE {
 public:
-	CCAR(int up, int down, int left, int right,int tmpfloor) :CVEHICLE(up, down, left, right,tmpfloor) {
+	CCAR(int up, int down, int left, int right, int tmpfloor) :CVEHICLE(up, down, left, right, tmpfloor) {
 
 	}
 	CCAR() = default;
-	~CCAR();
-	bool isCollide(const CPEOPLE &tmp)
+	~CCAR()
 	{
-		return CVEHICLE::isCollide(tmp);
+
 	}
-	void GoRight()
+	bool GoRight()
 	{
-		CObject::GoRight();
+		return CObject::GoRight();
 	}
-	void GoLeft()
+	bool GoLeft()
 	{
-		CObject::GoLeft();
+		return CObject::GoLeft();
 	}
 private:
 	void DCAR();//drawing car
