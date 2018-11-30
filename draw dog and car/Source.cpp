@@ -1,6 +1,49 @@
 #include <iostream>
+#include <deque>
+#include <vector>
+#include <conio.h>
+#include <time.h>
 #include <Windows.h>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
+
+void cls()
+{
+	HANDLE hStdOut;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	DWORD count;
+	DWORD cellCount;
+	COORD homeCoords = { 0, 0 };
+
+	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hStdOut == INVALID_HANDLE_VALUE) return;
+
+	/* Get the number of cells in the current buffer */
+	if (!GetConsoleScreenBufferInfo(hStdOut, &csbi)) return;
+	cellCount = csbi.dwSize.X *csbi.dwSize.Y;
+
+	/* Fill the entire buffer with spaces */
+	if (!FillConsoleOutputCharacter(
+		hStdOut,
+		(TCHAR) ' ',
+		cellCount,
+		homeCoords,
+		&count
+	)) return;
+
+	/* Fill the entire buffer with the current colors and attributes */
+	if (!FillConsoleOutputAttribute(
+		hStdOut,
+		csbi.wAttributes,
+		cellCount,
+		homeCoords,
+		&count
+	)) return;
+
+	/* Move the cursor home */
+	SetConsoleCursorPosition(hStdOut, homeCoords);
+}
 
 void gotoxy(int x, int y);
 void drawdog(int x, int y);
@@ -10,13 +53,14 @@ void drawplayer(int x, int y);
 
 void drawcar(int x, int y)
 {
+	int color = rand() % 2 + 12;
 	char a = 219, b = 220, c = 223;
 	gotoxy(x, y+1);
 	// dai 20, cao 4
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
 	cout << a;
 	gotoxy(x, y);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 	cout << b;
 	gotoxy(x+1, y); cout << a;
 	gotoxy(x+1, y+1); cout << a;
@@ -28,7 +72,7 @@ void drawcar(int x, int y)
 		gotoxy(i, y+1); cout << a;
 		gotoxy(i, y+2); cout << c;
 	}
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 	for (int i = x+3; i < x+8; ++i)
 	{
 		gotoxy(i, y); cout << a;
@@ -52,7 +96,7 @@ void drawcar(int x, int y)
 	}
 	gotoxy(x+11, y-1); cout << b;
 	gotoxy(x+13, y); cout << b;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 	for (int i = x+8; i < x+14; ++i)
 	{
 		gotoxy(i, y+1); cout << a;
@@ -63,7 +107,7 @@ void drawcar(int x, int y)
 		gotoxy(i, y+1); cout << a;
 		gotoxy(i, y+2); cout << c;
 	}
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 	for (int i = x+14; i < x+18; ++i)
 	{
 		gotoxy(i, y);
@@ -159,6 +203,7 @@ void drawplayer(int x, int y)
 	gotoxy(x+2, y-2); cout << b;
 }
 
+
 int main()
 {
 	FixConsoleWindow();
@@ -168,56 +213,14 @@ int main()
 	RECT r;
 	GetWindowRect(console, &r); //stores the console's current dimensions
 
-	MoveWindow(console, r.left, r.top, 1920, 1080, TRUE); // 800 width, 100 height
-	
-	/*SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-	gotoxy(50, 20);
-	char a = 219, b = 220,c=223;
-	cout << a;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	for (int i = 20; i < 23; ++i)
-	{
-		gotoxy(51, i);
-		cout << a;
-	}
-	gotoxy(52, 20);
-	cout << b;
-	gotoxy(52, 21);
-	cout << a;
-	gotoxy(52, 22);
-	cout << c;
-	gotoxy(53, 20); cout << b;
-	gotoxy(53, 21); cout << a;
-	gotoxy(54, 20); cout << b;
-	gotoxy(54, 21); cout << a;
-	gotoxy(55, 20); cout << a;
-	gotoxy(55, 21); cout << a;
-	gotoxy(56, 20); cout << a;
-	gotoxy(56, 21); cout << a;
-	gotoxy(56, 19); cout << b;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-	gotoxy(57, 19); cout << a;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	for (int i = 20; i < 22; ++i)
-	{
-		gotoxy(57, i); cout << a;
-	}
-	gotoxy(57, 22); cout << c;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-	gotoxy(58, 19); cout << a;
-	gotoxy(58, 20); cout << b;
-	gotoxy(58, 21); cout << a;
-	gotoxy(58, 22); cout << a;
-	gotoxy(59, 19); cout << a;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-	gotoxy(59, 20); cout << a;*/
-	
-	//drawdog(1, 20);
-	//drawdog(50, 20);
+	MoveWindow(console, r.left, r.top, 1920, 1080, TRUE); // 210 char width, 100 height
 
-	//drawcar(50, 20);
-
-	drawplayer(50, 20);
+	//player should start at y=48 with 1080p console
+	
+	drawcar(50, 10);
+	drawcar(50, 16);
+	drawcar(50, 22);
+	
 	
 	cout << endl;
 	system("pause>nil");
