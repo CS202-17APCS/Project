@@ -184,23 +184,22 @@ void gotoxy(int x, int y)
 void drawplayer(int x, int y)
 {
 	char a = 219, b = 220, c = 223, d = 221, e = 222;
-	gotoxy(x, y);
-	//cao 4 dai 4
+	gotoxy(x, y);//x=50,y=20
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	cout << a << a;
+	gotoxy(x-1, y+1);
 	cout << d;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-	gotoxy(x+1, y); cout << a;
-	gotoxy(x+2, y); cout << a;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-	gotoxy(x+3, y); cout << e;
-	gotoxy(x+1, y-1); cout << a;
-	gotoxy(x+2, y-1); cout << a;
+	gotoxy(x+2, y+1);
+	cout << e;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+	gotoxy(x, y+1);
+	cout << a << a;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-	gotoxy(x+1, y+1); cout << d;
-	gotoxy(x+2, y+1); cout << e;
+	gotoxy(x, y+2);
+	cout << d;
+	gotoxy(x+1, y+2); cout << e;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-	gotoxy(x+1, y-2); cout << b;
-	gotoxy(x+2, y-2); cout << b;
+	gotoxy(x, y-1); cout << b << b;
 }
 
 
@@ -217,8 +216,10 @@ int main()
 
 	//player should start at y=48 with 1080p console
 	
-	drawcar(50, 10);
-	drawcar(50, 16);
+	//drawcar(72, 16);
+	drawplayer(72, 22);
+	//drawcar(50, 10);
+	//drawdog(50, 16);
 	drawcar(50, 22);
 	
 	
