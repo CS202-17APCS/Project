@@ -50,6 +50,32 @@ void drawdog(int x, int y);
 void FixConsoleWindow();
 void drawcar(int x, int y);
 void drawplayer(int x, int y);
+void drawsnake(int x, int y);
+
+void drawsnake(int x, int y)
+{
+	char a = 219, b = 220, c = 223;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	gotoxy(x+4, y);// x=50,y=20
+	cout << a << a;
+	gotoxy(x+4, y+1);
+	cout << a << a;
+	gotoxy(x+5, y+2);
+	cout << a;
+	for (int i = x+4; i > x+1; --i)
+	{
+		gotoxy(i, y+2);
+		cout << b;
+	}
+	gotoxy(x+1, y+2); cout << a;
+	gotoxy(x, y+2); cout << c;
+	gotoxy(x, y+1); cout << b;
+	gotoxy(x+6, y+2); cout << c;
+	gotoxy(x+6, y+1); cout << b;
+	gotoxy(x+6, y); cout << b;
+	gotoxy(x+5, y-1); cout << b << b << b;
+	gotoxy(x+7, y); cout << a;
+}
 
 void drawcar(int x, int y)
 {
@@ -217,10 +243,34 @@ int main()
 	//player should start at y=48 with 1080p console
 	
 	//drawcar(72, 16);
-	drawplayer(72, 22);
+	//drawplayer(72, 22);
 	//drawcar(50, 10);
 	//drawdog(50, 16);
-	drawcar(50, 22);
+	//drawcar(50, 22);
+	
+	/*char a = 219, b = 220, c = 223;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	gotoxy(54, 20);
+	cout << a<< a;
+	gotoxy(54, 21);
+	cout << a << a;
+	gotoxy(55, 22); 
+	cout << a;
+	for (int i = 54; i > 51; --i)
+	{
+		gotoxy(i, 22);
+		cout << b;
+	}
+	gotoxy(51, 22); cout << a;
+	gotoxy(50, 22); cout << c;
+	gotoxy(50, 21); cout << b;
+	gotoxy(56, 22); cout << c;
+	gotoxy(56, 21); cout << b;
+	gotoxy(56, 20); cout << b;
+	gotoxy(55, 19); cout << b << b << b;
+	gotoxy(57, 20); cout << a;*/
+
+	drawsnake(50, 20);
 	
 	
 	cout << endl;
