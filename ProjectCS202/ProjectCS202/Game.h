@@ -12,10 +12,12 @@ class CGAME {
 public:
 	CGAME()
 	{
-		Curlevel=1;
+		Curlevel=1;//Set Number Of Vehicle Here
+		int CurFloor = 0;
 		getPeopleByDefault();
 		getVehicleByDefault();
 		getAnimalByDefault();
+		bool impact=false;
 		while(true)
 		{ 
 			drawAni();
@@ -25,38 +27,70 @@ public:
 			{
 				CPEOPLE tmp(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 1);
 				PEOPLE = tmp;
+				CurFloor = 0;
 			}
+			else
+				CurFloor++;
 			updatePosVehicle();
+			updatePosAnimal();
+			//Check collide
+			if (CurFloor % 2 == 0)
+				impact = PEOPLE.imPact(VE[CurFloor]);
+			else
+			if(CurFloor%2!=0)
+				impact = PEOPLE.isImpact(ANI[CurFloor]);
+			if (impact)
+			{
+				break;
+			}
 			Sleep(100);
 			system("cls");
 		}
 		system("pause>nil");
+		/*drawHuman();
+		while (true)
+		{
+			char c = _getch();
+			if (c == 'W' || c == 'A' || c == 'D' || c == 'S'||c=='w'||c=='a'||c=='s'||c=='d')
+			{
+				system("cls");
+				Sleep(100);
+				updatePosPeople(c);
+				drawHuman();
+			}
+		}*/
 	}
-	void drawAni()
+	void drawAni()//OK
 	{
 		int xcor=0, ycor=0;
 		for (int i = 1; i <=maxfloorsForAni; i+=2)
 		{
-			ANI[i][0]->BlockCor(xcor, ycor);
-			draw_reverse_dog(xcor, ycor);
+			for (int j = 0; j < ANI[i].size(); j++)
+			{
+				ANI[i][j]->BlockCor(xcor, ycor);
+				draw_reverse_dog(xcor, ycor);
+			}
 		}
 	}
-	void drawVe()
+	void drawVe()//OK
 	{
 		int xcor = 0, ycor = 0;
 		for (int i = 2; i <=maxfloorsForVe; i+=2)
 		{
-			VE[i][0]->BlockCor(xcor, ycor);
-			drawcar(xcor, ycor);
+			for (int j = 0; j < VE[i].size(); j++)
+			{
+				VE[i][j]->BlockCor(xcor, ycor);
+				drawcar(xcor%RightEdge, ycor);
+			}
 		}
 	}
-	void drawHuman()
+	void drawHuman()//OK
 	{
 		int xcor = 0, ycor = 0;
 		PEOPLE.BlockCor(xcor, ycor);
 		drawplayer(xcor, ycor);
 	}
-	void drawGame()
+	void drawGame()//Just for testing
 	{
 		int height = 35;
 		drawplayer(50, 41);
@@ -78,11 +112,11 @@ public:
 	void getPeopleFile();//load game
 	void getAnimalFile();//load game
 	void getVehicleFile();//load game
-	void getPeopleByDefault()//New game
+	void getPeopleByDefault()//New game(OK)
 	{
 		PEOPLE=CPEOPLE(YCorOfHuman-1, YCorOfHuman+2,XCorOfHuman-1 , XCorOfHuman+2,1);//please change the coordinate of people
 	}
-	void getVehicleByDefault()//New game
+	void getVehicleByDefault()//New game(OK)
 	{
 		int Distance = (RightEdge - LeftEdge - Curlevel * LengthVe) / Curlevel ;
 		if (Curlevel != 1)
@@ -103,7 +137,7 @@ public:
 			startHeight -= LengthBetweenRows;
 		}
 	}
-	void getAnimalByDefault()//New game
+	void getAnimalByDefault()//New game(OK)
 	{
 		int Distance = (RightEdge - LeftEdge - Curlevel * LengthAni) / Curlevel;
 		if (Curlevel != 1)
@@ -155,9 +189,9 @@ public:
 		}
 		//After pressing p go on printing out the console
 	}
-	void updatePosPeople(char c)
+	void updatePosPeople(char c)//OK
 	{
-		if (c == 'W')
+		if (c == 'W'||c=='w')
 		{
 			if (Curlevel == 6)
 			{
@@ -165,27 +199,29 @@ public:
 			}
 			else
 			{
-				if (PEOPLE.GoUp() == false)//Standing on the maximum floor
+				if (PEOPLE.GoUp() == false)//Standing on the maximum floor ,checking by using Coordinates
 				{
 					//Go to next level
 					Curlevel++;
+					CPEOPLE tmp(PEOPLE,YCorOfHuman - 1, YCorOfHuman + 2);
+					PEOPLE = tmp;
 				}
 			}
 		}
-		else if (c == 'A')
+		else if (c == 'A'||c=='a')
 		{
 			bool checkLeft = PEOPLE.GoLeft();//creating bool variables just for checking for later problem . People will go to the left 
 		}
-		else if (c == 'S')
+		else if (c == 'S'||c=='s')
 		{
 			bool checkDown = PEOPLE.GoDown();
 		}
-		else if (c == 'D')
+		else if (c == 'D'||c=='d')
 		{
-			bool checkRight = PEOPLE.GoDown();
+			bool checkRight = PEOPLE.GoRight();
 		}
 	}
-	void updatePosVehicle()
+	void updatePosVehicle()//OK
 	{
 		int startHeight = YCorOfAni;
 		for (int i = 2; i <= maxfloorsForVe; i += 2)
@@ -200,7 +236,7 @@ public:
 			startHeight -= LengthBetweenRows;
 		}
 	}
-	void updatePosAnimal()
+	void updatePosAnimal()//OK
 	{
 		for (int i = 1; i <= maxfloorsForAni; i += 2)
 		{

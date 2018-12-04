@@ -13,6 +13,13 @@ public:
 	CPEOPLE(int up, int down, int left, int right, int tmpfloor) :CObject(up, down, left, right, tmpfloor) {
 		mState = false;
 	}
+	CPEOPLE(const CPEOPLE&tmp,int up, int down) :CObject(tmp,up, down) {
+		mState = false;
+	}
+	CPEOPLE(int left, int right,int LR) :CObject(right, left,LR)
+	{
+		mState = false;
+	}
 	bool GoUp() {
 		return CObject::GoUp();
 	}

@@ -24,6 +24,14 @@ public:
 	{
 		CObject::BlockCor(x, y);
 	}
+	void ObStacleRight()//for ObStacles only
+	{
+		CObject::ObStacleRight();
+	}
+	void ObStacleLeft()
+	{
+		CObject::ObStacleLeft();
+	}
 private:
 	int Num;//numberofvehicle
 };
