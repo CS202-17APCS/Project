@@ -10,6 +10,6 @@ int main()
 	GetWindowRect(console, &r); //stores the console's current dimensions
 
 	MoveWindow(console, r.left, r.top, 1920, 1080, TRUE);
-	CGAME mygame;
-	mygame.drawGame();
+	CGAME mygame;//new game only
+	//mygame.drawGame();
 }

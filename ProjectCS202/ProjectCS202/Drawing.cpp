@@ -124,3 +124,68 @@ void drawdog(int x, int y)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
 	gotoxy(x + 9, y); cout << a;
 }
+void drawplayer(int x, int y)
+{
+	char a = 219, b = 220, c = 223, d = 221, e = 222;
+	gotoxy(x, y);//x=50,y=20
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	cout << a << a;
+	gotoxy(x - 1, y + 1);
+	cout << d;
+	gotoxy(x + 2, y + 1);
+	cout << e;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+	gotoxy(x, y + 1);
+	cout << a << a;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	gotoxy(x, y + 2);
+	cout << d;
+	gotoxy(x + 1, y + 2); cout << e;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+	gotoxy(x, y - 1); cout << b << b;
+}
+void draw_reverse_dog(int x, int y)
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+	gotoxy(x, y);// x=50, y=20
+				 // do dai cua con cho la 9, do cao la 4
+	char a = 219, b = 220, c = 223;
+	cout << a;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+	for (int i = y; i < y + 3; ++i)
+	{
+		gotoxy(x - 1, i);
+		cout << a;
+	}
+	gotoxy(x - 2, y);
+	cout << b;
+	gotoxy(x - 2, y + 1);
+	cout << a;
+	gotoxy(x - 2, y + 2);
+	cout << c;
+	gotoxy(x - 3, y); cout << b;
+	gotoxy(x - 3, y + 1); cout << a;
+	gotoxy(x - 4, y); cout << b;
+	gotoxy(x - 4, y + 1); cout << a;
+	gotoxy(x - 5, y); cout << a;
+	gotoxy(x - 5, y + 1); cout << a;
+	gotoxy(x - 6, y); cout << a;
+	gotoxy(x - 6, y + 1); cout << a;
+	gotoxy(x - 6, y - 1); cout << b;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+	gotoxy(x - 7, y - 1); cout << a;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+	for (int i = y; i < y + 2; ++i)
+	{
+		gotoxy(x - 7, i); cout << a;
+	}
+	gotoxy(x - 7, y + 2); cout << c;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+	gotoxy(x - 8, y - 1); cout << a;
+	gotoxy(x - 8, y); cout << b;
+	gotoxy(x - 8, y + 1); cout << a;
+	gotoxy(x - 8, y + 2); cout << a;
+	gotoxy(x - 9, y - 1); cout << a;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+	gotoxy(x - 9, y); cout << a;
+}

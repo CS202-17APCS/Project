@@ -5,22 +5,70 @@
 #include "People.h"
 #include "Drawing.h"
 class CGAME {
-	vector<CVEHICLE*> VE[2];
-	vector<CANIMAL*> ANI[2];
+	vector<CVEHICLE*> VE[100];
+	vector<CANIMAL*> ANI[100];
 	CPEOPLE PEOPLE;
 	int Curlevel;//6 levels for a game
 public:
 	CGAME()
 	{
-
+		Curlevel=1;
+		getPeopleByDefault();
+		getVehicleByDefault();
+		getAnimalByDefault();
+		while(true)
+		{ 
+			drawAni();
+			drawVe();
+			drawHuman();
+			if (PEOPLE.GoUp() == false)
+			{
+				CPEOPLE tmp(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 1);
+				PEOPLE = tmp;
+			}
+			updatePosVehicle();
+			Sleep(100);
+			system("cls");
+		}
+		system("pause>nil");
+	}
+	void drawAni()
+	{
+		int xcor=0, ycor=0;
+		for (int i = 1; i <=maxfloorsForAni; i+=2)
+		{
+			ANI[i][0]->BlockCor(xcor, ycor);
+			draw_reverse_dog(xcor, ycor);
+		}
+	}
+	void drawVe()
+	{
+		int xcor = 0, ycor = 0;
+		for (int i = 2; i <=maxfloorsForVe; i+=2)
+		{
+			VE[i][0]->BlockCor(xcor, ycor);
+			drawcar(xcor, ycor);
+		}
+	}
+	void drawHuman()
+	{
+		int xcor = 0, ycor = 0;
+		PEOPLE.BlockCor(xcor, ycor);
+		drawplayer(xcor, ycor);
 	}
 	void drawGame()
 	{
-		drawdog(0, 35);
-		drawcar(0, 25);
-		drawdog(0, 15);
-		drawcar(0, 5);
-		system("pause");
+		int height = 35;
+		drawplayer(50, 41);
+		int count = 0;
+		for (int start = height; start >= 5; start -= 6, count += 1)
+		{
+			if (count % 2 == 0)
+				draw_reverse_dog(165, start);
+			else
+				drawcar(0, start);
+		}
+		system("pause>nil");
 	}
 	~CGAME() {};
 	bool FinishGame()//Check whether game is finished or not
@@ -32,44 +80,48 @@ public:
 	void getVehicleFile();//load game
 	void getPeopleByDefault()//New game
 	{
-		PEOPLE=CPEOPLE(UpPEOPLE, DownPEOPLE, LeftPEOPLE, RightPEOPLE,1);//please change the coordinate of people
+		PEOPLE=CPEOPLE(YCorOfHuman-1, YCorOfHuman+2,XCorOfHuman-1 , XCorOfHuman+2,1);//please change the coordinate of people
 	}
 	void getVehicleByDefault()//New game
 	{
-		int Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / Curlevel ;
+		int Distance = (RightEdge - LeftEdge - Curlevel * LengthVe) / Curlevel ;
 		if (Curlevel != 1)
-			Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / (Curlevel - 1);
-		for (int i = 1; i < maxfloors-1; i+=2)
+			Distance = (RightEdge - LeftEdge - Curlevel * LengthVe) / (Curlevel - 1);
+		int startHeight = YCorOfVe;
+		for (int i = 2; i <= maxfloorsForVe; i+=2)
 		{
 			int startPos = LeftEdge;
 			for(int j=0;j<Curlevel;j++)
 			{
-				CVEHICLE *tmp = new CCAR(BelowEdge + i * Height + Height, BelowEdge + i * Height, startPos, startPos + LengthOb,i+1);
+				CVEHICLE *tmp = new CCAR(startHeight-1, startHeight+2, startPos, startPos + LengthVe,i+1);
 				VE[i].push_back(tmp);
-				delete tmp;
-				startPos =startPos+LengthOb+Distance;//startpos+=distance
+				//delete tmp;
+				startPos =startPos+LengthVe+Distance;//startpos+=distance
 				if (startPos >= RightEdge)
 					break;
 			}
+			startHeight -= LengthBetweenRows;
 		}
 	}
 	void getAnimalByDefault()//New game
 	{
-		int Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / Curlevel;
+		int Distance = (RightEdge - LeftEdge - Curlevel * LengthAni) / Curlevel;
 		if (Curlevel != 1)
-			Distance = (RightEdge - LeftEdge - Curlevel * LengthOb) / (Curlevel - 1);
-		for (int i = 1; i < maxfloors - 1; i += 2)
+			Distance = (RightEdge - LeftEdge - Curlevel * LengthAni) / (Curlevel - 1);
+		int startHeight = YCorOfAni;
+		for (int i = 1; i <= maxfloorsForAni; i += 2)
 		{
 			int startPos = RightEdge;
 			for (int j = 0; j<Curlevel; j++)
 			{
-				CANIMAL *tmp = new CBIRD(BelowEdge + i * Height + Height, BelowEdge + i * Height, startPos-LengthOb, startPos,i+1);
+				CANIMAL *tmp = new CBIRD(startHeight-1, startHeight+2, startPos-9, startPos,i+1);
 				ANI[i].push_back(tmp);
-				delete tmp;
-				startPos = startPos - LengthOb - Distance;//startpos+=distance
+				//delete tmp;
+				startPos = startPos - LengthAni - Distance;//startpos+=distance
 				if (startPos <= LeftEdge)
 					break;
 			}
+			startHeight -= LengthBetweenRows;
 		}
 	}
 	void resetGame()
@@ -135,17 +187,22 @@ public:
 	}
 	void updatePosVehicle()
 	{
-		for (int i = 1; i < maxfloors; i += 2)
+		int startHeight = YCorOfAni;
+		for (int i = 2; i <= maxfloorsForVe; i += 2)
 		{
 			for (int j = 0; j < VE[i].size(); j++)
 			{
-				VE[i][j]->GoRight();//Vehicle goes right
+				if (VE[i][j]->GoRight()==false)//Vehicle goes right
+				{
+					CCAR tmp(startHeight - 1, startHeight + 2, 0, 0 + LengthVe, i + 1);
+				}
 			}
+			startHeight -= LengthBetweenRows;
 		}
 	}
 	void updatePosAnimal()
 	{
-		for (int i = 1; i < maxfloors; i += 2)
+		for (int i = 1; i <= maxfloorsForAni; i += 2)
 		{
 			for (int j = 0; j < ANI[i].size(); j++)
 			{

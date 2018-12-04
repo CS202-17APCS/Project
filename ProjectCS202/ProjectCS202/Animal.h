@@ -24,7 +24,10 @@ public:
 	int getSize() {
 		return Num;
 	}
-
+	void BlockCor(int &x, int &y)
+	{
+		CObject::BlockCor(x, y);
+	}
 private:
 	int Num;//numberofanimals
 };
@@ -70,6 +73,12 @@ public:
 	/*void playSound() {
 		loadSound(CBIRD_SOUND_FILE);
 	}*/
+	void BlockCor(int &x, int &y)
+	{
+		CObject::BlockCor(x, y);
+		x += 9;
+		y += 1;
+	}
 private:
 	void DBIRD();//drawing BIRD
 };

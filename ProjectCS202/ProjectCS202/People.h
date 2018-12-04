@@ -50,6 +50,12 @@ public:
 		return CObject::checkFinish(tmpfloor);
 	}
 	bool isDead() { return mState; }
+	void BlockCor(int &x,int &y)
+	{
+		CObject::BlockCor(x, y);
+		x += 1;
+		y += 1;
+	}
 };
 #endif
 

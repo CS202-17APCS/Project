@@ -26,8 +26,8 @@ public:
 	{
 		if (Curfloor != 6)
 		{
-			SetUp += Height;
-			SetDown += Height;
+			SetUp -= LengthBetweenOb;
+			SetDown -= LengthBetweenOb;
 			Curfloor++;
 			return true;
 		}
@@ -37,8 +37,8 @@ public:
 	{
 		if (Curfloor != 1)
 		{
-			SetUp -= Height;
-			SetDown -= Height;
+			SetUp += LengthBetweenOb;
+			SetDown += LengthBetweenOb;
 			Curfloor--;
 			return true;
 		}
@@ -46,18 +46,20 @@ public:
 	}
 	virtual bool GoRight()
 	{
-		if (SetRight != RightEdge)
+		if (SetRight+5 != RightEdge)
 		{
-			SetRight++;
+			SetRight+=5;
+			SetLeft += 5;
 			return true;
 		}
 		return false;
 	}
 	virtual bool GoLeft()
 	{
-		if (SetLeft != LeftEdge)
+		if (SetLeft-5 != LeftEdge)
 		{
-			SetLeft--;
+			SetLeft -= 5;
+			SetRight -= 5;
 			return true;
 		}
 		return false;
@@ -76,5 +78,10 @@ public:
 		return Curfloor == maxfloor;
 	}
 	//must modify below functions
+	virtual void BlockCor(int &x, int &y)
+	{
+		x = SetLeft;
+		y = SetUp;
+	}
 };
 #endif

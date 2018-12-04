@@ -20,6 +20,10 @@ public:
 	int getSize() {
 		return Num;
 	}
+	void BlockCor(int &x, int &y)
+	{
+		CObject::BlockCor(x, y);
+	}
 private:
 	int Num;//numberofvehicle
 };
@@ -58,6 +62,10 @@ public:
 	bool GoLeft()
 	{
 		return CObject::GoLeft();
+	}
+	void BlockCor(int &x, int &y)
+	{
+		CVEHICLE::BlockCor(x, y);
 	}
 private:
 	void DCAR();//drawing car
