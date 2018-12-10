@@ -4,37 +4,32 @@
 #include "Object.h"
 #include "People.h"
 #include "Drawing.h"
+#include "CTRAFFICLIGHT.h"
 class CGAME {
 	vector<CVEHICLE*> VE[100];
 	vector<CANIMAL*> ANI[100];
+	CLIGHT LIGHT[100];
 	CPEOPLE PEOPLE;
 	int Curlevel;//6 levels for a game
+	int CurFloor;
 public:
 	CGAME()
 	{
-		Curlevel=1;//Set Number Of Vehicle Here
-		int CurFloor = 0;
+		Curlevel = 2;// Set Number Of Vehicle Here
 		getPeopleByDefault();
 		getVehicleByDefault();
 		getAnimalByDefault();
+		CurFloor = 0;
 		bool impact=false;
 		while(true)
 		{ 
 			drawAni();
 			drawVe();
 			drawHuman();
-			if (PEOPLE.GoUp() == false)
-			{
-				CPEOPLE tmp(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 1);
-				PEOPLE = tmp;
-				CurFloor = 0;
-			}
-			else
-				CurFloor++;
 			updatePosVehicle();
 			updatePosAnimal();
 			//Check collide
-			if (CurFloor % 2 == 0)
+			/*if (CurFloor % 2 == 0)
 				impact = PEOPLE.imPact(VE[CurFloor]);
 			else
 			if(CurFloor%2!=0)
@@ -42,12 +37,12 @@ public:
 			if (impact)
 			{
 				break;
-			}
-			Sleep(100);
+			}*/
+			Sleep(10000000000000);
 			system("cls");
 		}
 		system("pause>nil");
-		/*drawHuman();
+	/*	drawHuman();
 		while (true)
 		{
 			char c = _getch();
@@ -56,19 +51,32 @@ public:
 				system("cls");
 				Sleep(100);
 				updatePosPeople(c);
+				if (Curlevel == 6)
+					break;
 				drawHuman();
 			}
 		}*/
+		FinishGames();
+		system("pause");
+	}
+	void NextLevelScreen()
+	{
+		gotoxy(60, 20);
+		cout << "Level " << Curlevel;
+		Sleep(1000);
+		system("cls");
 	}
 	void drawAni()//OK
 	{
 		int xcor=0, ycor=0;
+		bool check;
 		for (int i = 1; i <=maxfloorsForAni; i+=2)
 		{
 			for (int j = 0; j < ANI[i].size(); j++)
 			{
 				ANI[i][j]->BlockCor(xcor, ycor);
-				draw_reverse_dog(xcor, ycor);
+				if((xcor-LengthAni)>=0)
+				 draw_reverse_dog(xcor, ycor);
 			}
 		}
 	}
@@ -80,7 +88,8 @@ public:
 			for (int j = 0; j < VE[i].size(); j++)
 			{
 				VE[i][j]->BlockCor(xcor, ycor);
-				drawcar(xcor%RightEdge, ycor);
+				if(xcor+LengthVe<=RightEdge)
+				 drawcar(xcor, ycor);
 			}
 		}
 	}
@@ -105,10 +114,6 @@ public:
 		system("pause>nil");
 	}
 	~CGAME() {};
-	bool FinishGame()//Check whether game is finished or not
-	{
-		return Curlevel == 6;
-	}
 	void getPeopleFile();//load game
 	void getAnimalFile();//load game
 	void getVehicleFile();//load game
@@ -148,7 +153,7 @@ public:
 			int startPos = RightEdge;
 			for (int j = 0; j<Curlevel; j++)
 			{
-				CANIMAL *tmp = new CBIRD(startHeight-1, startHeight+2, startPos-9, startPos,i+1);
+				CANIMAL *tmp = new CBIRD(startHeight-1, startHeight+2, startPos-LengthAni, startPos,i+1);
 				ANI[i].push_back(tmp);
 				//delete tmp;
 				startPos = startPos - LengthAni - Distance;//startpos+=distance
@@ -189,13 +194,30 @@ public:
 		}
 		//After pressing p go on printing out the console
 	}
+	void FinishGames()
+	{
+		system("cls");
+		gotoxy(60, 20);
+		cout << "CONGRATULATION!";
+		cout << "Do you want to play again";
+		while (true)
+		{
+			char m = _getch();
+			if (m == 'Y' || m == 'y')
+			{
+				system("cls");
+				CGAME tmp;
+				*this = tmp;
+			}
+		}
+	}
 	void updatePosPeople(char c)//OK
 	{
 		if (c == 'W'||c=='w')
 		{
 			if (Curlevel == 6)
 			{
-				//Finish game
+				//
 			}
 			else
 			{
@@ -203,9 +225,15 @@ public:
 				{
 					//Go to next level
 					Curlevel++;
+					CurFloor = 0;
 					CPEOPLE tmp(PEOPLE,YCorOfHuman - 1, YCorOfHuman + 2);
+					getVehicleByDefault();
+					getAnimalByDefault();
+					system("cls");
+					NextLevelScreen();
 					PEOPLE = tmp;
 				}
+
 			}
 		}
 		else if (c == 'A'||c=='a')
@@ -226,14 +254,18 @@ public:
 		int startHeight = YCorOfAni;
 		for (int i = 2; i <= maxfloorsForVe; i += 2)
 		{
-			for (int j = 0; j < VE[i].size(); j++)
+			if (LIGHT[i].OnGreen())
 			{
-				if (VE[i][j]->GoRight()==false)//Vehicle goes right
+				for (int j = 0; j < VE[i].size(); j++)
 				{
-					CCAR tmp(startHeight - 1, startHeight + 2, 0, 0 + LengthVe, i + 1);
+					/*if (VE[i][j]->GoRight()==false)//Vehicle goes right
+					{
+						CCAR tmp(startHeight - 1, startHeight + 2, 0, 0 + LengthVe, i + 1);
+					}*/
+					VE[i][j]->ObStacleRight();
 				}
+				startHeight -= LengthBetweenRows;
 			}
-			startHeight -= LengthBetweenRows;
 		}
 	}
 	void updatePosAnimal()//OK
@@ -242,7 +274,7 @@ public:
 		{
 			for (int j = 0; j < ANI[i].size(); j++)
 			{
-				ANI[i][j]->GoLeft();//Animal goes left
+				ANI[i][j]->ObStacleLeft();//Animal goes left
 			}
 		}
 	}

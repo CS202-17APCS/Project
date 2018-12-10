@@ -34,6 +34,7 @@ public:
 	}
 private:
 	int Num;//numberofvehicle
+	//bool OutScreen;//True => drawing False =>Not Drawing
 };
 class CTRUCK :public CVEHICLE {
 public:
@@ -49,6 +50,14 @@ public:
 	bool GoLeft()
 	{
 		return CVEHICLE::GoLeft();
+	}
+	void ObStacleRight(bool &check)//for ObStacles only
+	{
+		CObject::ObStacleRight();
+	}
+	void ObStacleLeft()
+	{
+		CObject::ObStacleLeft();
 	}
 private:
 	void DTRUCK();//drawing truck
@@ -74,6 +83,14 @@ public:
 	void BlockCor(int &x, int &y)
 	{
 		CVEHICLE::BlockCor(x, y);
+	}
+	void ObStacleRight()//for ObStacles only
+	{
+		CVEHICLE::ObStacleRight();
+	}
+	void ObStacleLeft()
+	{
+		CVEHICLE::ObStacleLeft();
 	}
 private:
 	void DCAR();//drawing car

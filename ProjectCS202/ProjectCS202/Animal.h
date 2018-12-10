@@ -28,6 +28,14 @@ public:
 	{
 		CObject::BlockCor(x, y);
 	}
+	void ObStacleRight()//for ObStacles only
+	{
+		CObject::ObStacleRight();
+	}
+	void ObStacleLeft()
+	{
+		CObject::ObStacleLeft();
+	}
 private:
 	int Num;//numberofanimals
 };
@@ -49,7 +57,14 @@ public:
 	void playSound() {
 		//loadSound(CDINOSAUR_SOUND_FILE);
 	}
-
+	void ObStacleRight()//for ObStacles only
+	{
+		CANIMAL::ObStacleRight();
+	}
+	void ObStacleLeft()
+	{
+		CANIMAL::ObStacleLeft();
+	}
 private:
 	void DDINOSAUR();//drawing DINOSAUR
 };
@@ -78,6 +93,14 @@ public:
 		CObject::BlockCor(x, y);
 		x += 9;
 		y += 1;
+	}
+	void ObStacleRight()//for ObStacles only
+	{
+		CANIMAL::ObStacleRight();
+	}
+	void ObStacleLeft()
+	{
+		CANIMAL::ObStacleLeft();
 	}
 private:
 	void DBIRD();//drawing BIRD

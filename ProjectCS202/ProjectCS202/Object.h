@@ -61,7 +61,7 @@ public:
 		if (SetRight+5 <= RightEdge)
 		{
 			SetRight+=5;
-			SetLeft += 5;
+			SetLeft +=5;
 			return true;
 		}
 		return false;
@@ -71,7 +71,7 @@ public:
 		if (SetLeft-5 >= LeftEdge)
 		{
 			SetLeft -= 5;
-			SetRight -= 5;
+			SetRight -=5;
 			return true;
 		}
 		return false;
@@ -97,13 +97,29 @@ public:
 	}
 	virtual void ObStacleRight()//for ObStacles only
 	{
-		SetRight += 5;
-		SetLeft += 5;
+		if (SetLeft + 5 >= RightEdge+10)
+		{
+			SetLeft = 0;
+			SetRight = SetLeft + LengthVe;
+		}
+		else
+		{
+			SetRight += 5;
+			SetLeft += 5;
+		}
 	}
 	virtual void ObStacleLeft()//for ObStacles only
 	{
-		SetRight -= 5;
-		SetLeft -= 5;
+		if (SetRight - 5 <= LeftEdge-10)
+		{
+			SetLeft = RightEdge - LengthAni;
+			SetRight = RightEdge;
+		}
+		else
+		{
+			SetLeft -= 5;
+			SetRight -= 5;
+		}
 	}
 };
 #endif
