@@ -21,8 +21,10 @@ public:
 		getAnimalByDefault();
 		CurFloor = 0;
 		bool impact=false;
+		DrawingLanes(true);
 		while(true)
 		{ 
+			DrawingLanes(false);
 			drawAni();
 			drawVe();
 			drawHuman();
@@ -38,11 +40,11 @@ public:
 			{
 				break;
 			}*/
-			Sleep(10000000000000);
+			Sleep(100);
 			system("cls");
 		}
 		system("pause>nil");
-	/*	drawHuman();
+		/*drawHuman();
 		while (true)
 		{
 			char c = _getch();
@@ -55,16 +57,59 @@ public:
 					break;
 				drawHuman();
 			}
-		}*/
+		}
+		system("cls");
 		FinishGames();
-		system("pause");
+		system("pause>nil");*/
+	}
+	void DrawingLanes(bool check)
+	{
+		char a = 1;
+		int k = 6;
+		for (int i = 0; i <= 42; i += k)
+		{
+			for (int j = 0; j <= RightEdge + 1; j++)
+			{
+				gotoxy(j, i);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 56);
+				cout << a;
+				if(check==true)
+				 Sleep(1);
+			}
+			if (i == 6)
+				k = 7;
+		}
 	}
 	void NextLevelScreen()
 	{
-		gotoxy(60, 20);
+		gotoxy(53, 18);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 53);
+		for (int i = 65; i < 87; i++)
+		{
+			gotoxy(i, 20);
+			cout << " ";
+			Sleep(20);
+		}
+		for (int i = 19; i > 15; i--)
+		{
+			gotoxy(86, i);
+			cout << " ";
+			Sleep(20);
+		}
+		for (int i = 86; i > 64; i--)
+		{
+			gotoxy(i, 16);
+			cout << " ";
+			Sleep(20);
+		}
+		for (int i = 16; i < 21; i++)
+		{
+			gotoxy(65, i);
+			cout << " ";
+			Sleep(20);
+		}
+		gotoxy(72, 18);
 		cout << "Level " << Curlevel;
-		Sleep(1000);
-		system("cls");
 	}
 	void drawAni()//OK
 	{
