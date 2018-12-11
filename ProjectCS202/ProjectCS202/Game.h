@@ -81,6 +81,7 @@ public:
 			{
 				VE[i][j]->BlockCor(xcor, ycor);
 				drawcar(xcor%RightEdge, ycor);
+				drawAmbuCar(xcor%RightEdge + 30, ycor);
 			}
 		}
 	}
@@ -99,8 +100,10 @@ public:
 		{
 			if (count % 2 == 0)
 				draw_reverse_dog(165, start);
-			else
+			else {
 				drawcar(0, start);
+				drawAmbuCar(0, start +10);
+			}
 		}
 		system("pause>nil");
 	}
