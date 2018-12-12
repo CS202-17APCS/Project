@@ -26,15 +26,17 @@ const int Height = 4;//set heigth of an object(vertical axis)
 const int WidthEdge = 6;//set width between two rows
 //adding
 const int XCorOfVe = 0;
-const int YCorOfVe = 31;
-const int YCorOfAni = 37;
+const int YCorOfVe = 32;
+const int YCorOfAni = 38;
 const int XCorOfAni = 165;
 const int XCorOfHuman = 50;
-const int YCorOfHuman = 37;
+const int YCorOfHuman = 42;
 const int LengthVe = 20;
 const int LengthAni = 9;
 const int LengthHuman = 4;
 const int LengthBetweenRows = 14;//Rows of same Objects(car-car ,dog-dog)
 const int LengthBetweenOb = 7;//Rows of dif Objects
 const int Step = 5;
+const int Stop = 6;
+const int Lightcor = 26;
 #endif

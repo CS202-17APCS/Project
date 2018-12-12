@@ -2,9 +2,8 @@
 class CLIGHT
 {
 public:
-	CLIGHT(int TRs,int TGs)
+	CLIGHT(int TGs)
 	{
-		TR = TRs;
 		TG = TGs;
 		red = false;
 		green = true;
@@ -12,29 +11,22 @@ public:
 	}
 	bool OnGreen()
 	{
+		Counttime++;
 		if (Counttime == TG)
 		{
-			red = true;
-			green = false;
-			Counttime = 0;
-			return false;
+			if (green == true)
+			{
+				green = false;
+				red = true;
+			}
+			else
+			{
+				green = true;
+				red = false;
+			}
+			Counttime=0;
 		}
-		return true;
-	}
-	bool OnRed()
-	{
-		if (Counttime == TR)
-		{
-			red = false;
-			green = true;
-			Counttime = 0;
-			return false;
-		}
-		return true;
-	}
-	void Increasetime()
-	{
-		Counttime++;
+		return green;
 	}
 	CLIGHT()
 	{
@@ -44,7 +36,6 @@ public:
 private:
 	bool red;
 	bool green;
-	int TR;//Time settings for red duration
 	int TG;//Time settings for green duration
 	int Counttime;
 };

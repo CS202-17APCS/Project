@@ -14,6 +14,11 @@ void drawcarSpace(int x, int y, int color);
 void draw_reverse_dogSpace(int x, int y, int color);
 void move_reverse_dog_by5(int x, int y);
 void move_car_by5(int x, int y);
+void drawGreenLight(int ycor);
+void drawGreenLight(int ycor);
+void drawRedLight(int ycor);
+void drawAmbuCar(int x, int y);
+
 
 
 

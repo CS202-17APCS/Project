@@ -1,4 +1,5 @@
 #include "Drawing.h"
+#include "LibraryPro.h"
 void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -28,6 +29,22 @@ void move_reverse_dog_by5(int x, int y)
 		gotoxy(i, y - 1);
 		cout << " ";
 	}
+}
+void drawGreenLight(int ycor)
+{
+	char a = 219;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+	if (ycor == 0) ycor++;
+	gotoxy(RightEdge, ycor);
+	cout << a << a;
+}
+void drawRedLight(int ycor)
+{
+	char a = 219;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 28);
+	if (ycor == 0) ycor++;
+	gotoxy(RightEdge, ycor);
+	cout << a << a;
 }
 void move_car_by5(int x, int y)
 {
@@ -146,6 +163,52 @@ void drawcar(int x, int y, int color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
 	gotoxy(x + 19, y + 1); cout << b;
 
+}
+void drawAmbuCar(int x, int y)
+{
+	char a = 219, b = 220, c = 223;
+	gotoxy(x, y + 1);
+	// dai 16, cao 4
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+	for (int i = 0; i < 12; ++i) {
+		for (int j = -1; j < 4; ++j) {
+			if (j == -1) {
+				gotoxy(i + x, j + y); cout << b;
+			}
+			else {
+				gotoxy(i + x, j + y); cout << a;
+			}
+		}
+	}
+	for (int i = 0; i < 12; ++i) {
+		gotoxy(i + x, y + 3); cout << c;
+	}
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+	gotoxy(x + 5, y); cout << a;
+	gotoxy(x + 6, y); cout << a;
+	for (int i = 3; i <= 8; ++i) {
+		gotoxy(x + i, y + 1); cout << a;
+	}
+	gotoxy(x + 5, y + 2); cout << a;
+	gotoxy(x + 6, y + 2); cout << a;
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+	gotoxy(x + 1, y + 3); cout << a;
+	gotoxy(x + 2, y + 3); cout << a;
+
+	gotoxy(x + 9, y + 3); cout << a;
+	gotoxy(x + 10, y + 3); cout << a;
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+	gotoxy(x + 12, y + 1); cout << a;
+	gotoxy(x + 12, y + 2); cout << a;
+	gotoxy(x + 13, y + 1); cout << a;
+	gotoxy(x + 13, y + 2); cout << a;
+	gotoxy(x + 12, y + 3); cout << a;
+	gotoxy(x + 13, y + 3); cout << a;
+	gotoxy(x + 12, y + 3); cout << c;
+	gotoxy(x + 13, y + 3); cout << c;
 }
 void drawcarSpace(int x, int y, int color)
 {

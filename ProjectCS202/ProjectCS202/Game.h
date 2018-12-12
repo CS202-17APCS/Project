@@ -16,27 +16,30 @@ class CGAME {
 public:
 	CGAME()
 	{
-		Curlevel = 1;// Set Number Of Vehicle Here
+		drawAmbuCar(80, 15);
+		/*Curlevel = 4;// Set Number Of Vehicle Here
 		getPeopleByDefault();
 		getVehicleByDefault();
 		getAnimalByDefault();
+		getLIGHT();
 		CurFloor = 1;
 		bool impact=false;
 		CPEOPLE tmp=PEOPLE;
 		CPEOPLE tmp1;
-		//DrawingLanes(true);
-		/*while(true)
+		DrawingLanes(true);
+		while(true)
 		{ 
-			//DrawingLanes(false);
+			DrawingLanes(false);
 			drawAni();
 			drawVe();
 			drawHuman();
-			NotFlickeringPeople(tmp, tmp1);
+			CountLevel();
+			//NotFlickeringPeople(tmp, tmp1);
 			updatePosVehicle();
 			updatePosAnimal();
-			updatePosPeople('W');
-			Sleep(1000);
-			//Check collide
+			//updatePosPeople('W',NextLevel);
+			Sleep(10);
+			//check collide
 			/*if (CurFloor % 2 == 0)
 				impact = PEOPLE.imPact(VE[CurFloor]);
 			else
@@ -45,9 +48,9 @@ public:
 			if (impact)
 			{
 				break;
-			}
-		}*/
-		//system("pause>nil");
+			}*/
+		//}
+		system("pause>nil");
 		/*drawHuman();
 		while (true)
 		{
@@ -75,6 +78,12 @@ public:
 	void turnOffNextLevel()
 	{
 		NextLevel = false;
+	}
+	void getLIGHT()// default light
+	{
+		LIGHT[2] = CLIGHT(Stop+100);
+		LIGHT[4] = CLIGHT(Stop);
+		LIGHT[6] = CLIGHT(Stop+200);
 	}
 	bool Handle()
 	{
@@ -106,7 +115,7 @@ public:
 	{
 		char a = 1;
 		int k = 6;
-		for (int i = 0; i <= 42; i += k)
+		for (int i = 6; i <= 39; i += k)
 		{
 			for (int j = 0; j <= RightEdge + 1; j++)
 			{
@@ -166,8 +175,9 @@ public:
 				ANI[i][j]->BlockCor(xcor, ycor);
 				if ((xcor - LengthAni) >= 0)
 				{
-					move_reverse_dog_by5(xcor + 5, ycor);
 					draw_reverse_dog(xcor, ycor, 14);
+					move_reverse_dog_by5(xcor + 5, ycor);
+					//draw_reverse_dog(xcor, ycor, 14);
 				}
 				else
 					draw_reverse_dogSpace(xcor+10, ycor, 14);
@@ -176,21 +186,35 @@ public:
 	}
 	void drawVe()//OK
 	{
+		int VeCor=28;
 		int xcor = 0, ycor = 0;
 		for (int i = 2; i <=maxfloorsForVe; i+=2)
 		{
-			for (int j = 0; j < VE[i].size(); j++)
+			if (LIGHT[i].OnGreen())
 			{
-				VE[i][j]->BlockCor(xcor, ycor);
-				if (xcor + LengthVe <= RightEdge)
+				for (int j = 0; j < VE[i].size(); j++)
 				{
-					move_car_by5(xcor, ycor);
-					drawcar(xcor+5, ycor, 15);
+					VE[i][j]->BlockCor(xcor, ycor);
+					if (xcor + LengthVe <= RightEdge)
+					{
+						drawcar(xcor + 5, ycor, 15);
+						move_car_by5(xcor, ycor);
+						//drawcar(xcor + 5, ycor, 15);
+					}
+					else
+						drawcarSpace(xcor, ycor, 15);
 				}
-				else
-					drawcarSpace(xcor, ycor, 15);
+				drawGreenLight(VeCor - (i/2-1)*LengthBetweenRows);
 			}
+			else
+				drawRedLight(VeCor - (i/2-1)*LengthBetweenRows);
 		}
+	}
+	void CountLevel()
+	{
+		gotoxy(0, 1);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+		cout << "Level " << Curlevel;
 	}
 	void drawHuman()//OK
 	{
@@ -284,9 +308,9 @@ public:
 	}
 	void loadGame(istream);
 	void saveGame(istream);
-	void pauseGame(HANDLE key)
+	void pauseGame(char key)
 	{
-		if (key == "p" || key == "P")
+		if (key == 'p' || key == 'P')
 			resumeGame();//waiting for user to enter P
 		//After pressing p go on printing out the console
 	}

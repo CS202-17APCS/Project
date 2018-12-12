@@ -9,9 +9,9 @@ mutex m;
 condition_variable cv;
 bool ready = false;
 
-CGAME mygame;
+//CGAME mygame;
 
-void drawAndUpdate(future<void> futureObj) {
+/*void drawAndUpdate(future<void> futureObj) {
 	while (futureObj.wait_for(chrono::milliseconds(1)) == future_status::timeout) {
 		unique_lock<mutex> lock(m);
 		cv.wait(lock, [] {return ready; });
@@ -23,7 +23,7 @@ void drawAndUpdate(future<void> futureObj) {
 		//this_thread::sleep_for(chrono::milliseconds(1));
 		// Add function to clear animal and vehicles here
 	}
-}
+}*/
 
 int main()
 {
@@ -36,7 +36,7 @@ int main()
 
 	MoveWindow(console, r.left, r.top, 1920, 1080, TRUE);
 	//new game only
-	promise<void> endSignal;
+	/*promise<void> endSignal;
 	future<void> futureObj = endSignal.get_future();
 	thread drawing(&drawAndUpdate, move(futureObj));
 	while (true) {
@@ -51,6 +51,7 @@ int main()
 			mygame.turnOffNextLevel();
 		}
 		//Sleep(100);
-	}
+	}*/
+	CGAME mygame;
 	//mygame.drawGame();
 }
