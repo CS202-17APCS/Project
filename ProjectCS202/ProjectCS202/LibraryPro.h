@@ -36,4 +36,5 @@ const int LengthAni = 9;
 const int LengthHuman = 4;
 const int LengthBetweenRows = 14;//Rows of same Objects(car-car ,dog-dog)
 const int LengthBetweenOb = 7;//Rows of dif Objects
+const int Step = 5;
 #endif

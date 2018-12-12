@@ -97,28 +97,28 @@ public:
 	}
 	virtual void ObStacleRight()//for ObStacles only
 	{
-		if (SetLeft + 5 >= RightEdge+10)
+		if (SetLeft + Step >= RightEdge+10)
 		{
 			SetLeft = 0;
 			SetRight = SetLeft + LengthVe;
 		}
 		else
 		{
-			SetRight += 5;
-			SetLeft += 5;
+			SetRight += Step;
+			SetLeft += Step;
 		}
 	}
 	virtual void ObStacleLeft()//for ObStacles only
 	{
-		if (SetRight - 5 <= LeftEdge-10)
+		if (SetRight - Step <= LeftEdge-8)
 		{
 			SetLeft = RightEdge - LengthAni;
 			SetRight = RightEdge;
 		}
 		else
 		{
-			SetLeft -= 5;
-			SetRight -= 5;
+			SetLeft -= Step;
+			SetRight -= Step;
 		}
 	}
 };

@@ -12,24 +12,30 @@ class CGAME {
 	CPEOPLE PEOPLE;
 	int Curlevel;//6 levels for a game
 	int CurFloor;
+	bool NextLevel = false;
 public:
 	CGAME()
 	{
-		Curlevel = 2;// Set Number Of Vehicle Here
+		Curlevel = 1;// Set Number Of Vehicle Here
 		getPeopleByDefault();
 		getVehicleByDefault();
 		getAnimalByDefault();
-		CurFloor = 0;
+		CurFloor = 1;
 		bool impact=false;
-		DrawingLanes(true);
-		while(true)
+		CPEOPLE tmp=PEOPLE;
+		CPEOPLE tmp1;
+		//DrawingLanes(true);
+		/*while(true)
 		{ 
-			DrawingLanes(false);
+			//DrawingLanes(false);
 			drawAni();
 			drawVe();
 			drawHuman();
+			NotFlickeringPeople(tmp, tmp1);
 			updatePosVehicle();
 			updatePosAnimal();
+			updatePosPeople('W');
+			Sleep(1000);
 			//Check collide
 			/*if (CurFloor % 2 == 0)
 				impact = PEOPLE.imPact(VE[CurFloor]);
@@ -39,28 +45,62 @@ public:
 			if (impact)
 			{
 				break;
-			}*/
-			Sleep(100);
-			system("cls");
-		}
-		system("pause>nil");
+			}
+		}*/
+		//system("pause>nil");
 		/*drawHuman();
 		while (true)
 		{
 			char c = _getch();
 			if (c == 'W' || c == 'A' || c == 'D' || c == 'S'||c=='w'||c=='a'||c=='s'||c=='d')
 			{
-				system("cls");
-				Sleep(100);
-				updatePosPeople(c);
+				if (updatePosPeople(c,NextLevel))
+				{
+					drawHuman();
+					NotFlickeringPeople(tmp, tmp1);
+				}
 				if (Curlevel == 6)
 					break;
-				drawHuman();
 			}
 		}
 		system("cls");
 		FinishGames();
 		system("pause>nil");*/
+	}
+
+	bool checkNextLevel()
+	{
+		return NextLevel;
+	}
+	void turnOffNextLevel()
+	{
+		NextLevel = false;
+	}
+	bool Handle()
+	{
+		CPEOPLE OldPos = PEOPLE;//Old Position of PEOPLE
+		CPEOPLE CurrentPos;//Current Postition of PEOPLE
+		char c = _getch();
+	//	drawHuman();
+		if (c == 'W' || c == 'A' || c == 'D' || c == 'S' || c == 'w' || c == 'a' || c == 's' || c == 'd')
+		{
+			if (updatePosPeople(c, NextLevel))
+			{
+				drawHuman();
+				NotFlickeringPeople(OldPos, CurrentPos);//Set People to that OldPos, Drawing Space People at that postion and then update OldPos to CurrentPos
+			//	Sleep(100);
+			}
+		}
+		return NextLevel;
+	}
+	void NotFlickeringPeople(CPEOPLE &OldPos, CPEOPLE&CurrentPos)
+	{
+		CurrentPos = PEOPLE;
+		PEOPLE = OldPos;
+		drawHumanSpace();//clearing Old Pos
+		//Sleep(100);
+		PEOPLE = CurrentPos;//Return to current Pos
+		OldPos = CurrentPos;// Updating OldPos to Current Pos
 	}
 	void DrawingLanes(bool check)
 	{
@@ -79,6 +119,7 @@ public:
 			if (i == 6)
 				k = 7;
 		}
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	}
 	void NextLevelScreen()
 	{
@@ -110,6 +151,9 @@ public:
 		}
 		gotoxy(72, 18);
 		cout << "Level " << Curlevel;
+		Sleep(100);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 0);
+		system("cls");
 	}
 	void drawAni()//OK
 	{
@@ -120,8 +164,13 @@ public:
 			for (int j = 0; j < ANI[i].size(); j++)
 			{
 				ANI[i][j]->BlockCor(xcor, ycor);
-				if((xcor-LengthAni)>=0)
-				 draw_reverse_dog(xcor, ycor);
+				if ((xcor - LengthAni) >= 0)
+				{
+					move_reverse_dog_by5(xcor + 5, ycor);
+					draw_reverse_dog(xcor, ycor, 14);
+				}
+				else
+					draw_reverse_dogSpace(xcor+10, ycor, 14);
 			}
 		}
 	}
@@ -133,8 +182,13 @@ public:
 			for (int j = 0; j < VE[i].size(); j++)
 			{
 				VE[i][j]->BlockCor(xcor, ycor);
-				if(xcor+LengthVe<=RightEdge)
-				 drawcar(xcor, ycor);
+				if (xcor + LengthVe <= RightEdge)
+				{
+					move_car_by5(xcor, ycor);
+					drawcar(xcor+5, ycor, 15);
+				}
+				else
+					drawcarSpace(xcor, ycor, 15);
 			}
 		}
 	}
@@ -144,7 +198,13 @@ public:
 		PEOPLE.BlockCor(xcor, ycor);
 		drawplayer(xcor, ycor);
 	}
-	void drawGame()//Just for testing
+	void drawHumanSpace()//Clear Position
+	{
+		int xcor = 0, ycor = 0;
+		PEOPLE.BlockCor(xcor, ycor);
+		drawplayerSpace(xcor, ycor);
+	}
+	/*void drawGame()//Just for testing
 	{
 		int height = 35;
 		drawplayer(50, 41);
@@ -157,7 +217,7 @@ public:
 				drawcar(0, start);
 		}
 		system("pause>nil");
-	}
+	}*/
 	~CGAME() {};
 	void getPeopleFile();//load game
 	void getAnimalFile();//load game
@@ -251,12 +311,11 @@ public:
 			if (m == 'Y' || m == 'y')
 			{
 				system("cls");
-				CGAME tmp;
-				*this = tmp;
+				//playagain
 			}
 		}
 	}
-	void updatePosPeople(char c)//OK
+	bool updatePosPeople(char c,bool &NextLevel)//OK
 	{
 		if (c == 'W'||c=='w')
 		{
@@ -276,22 +335,23 @@ public:
 					getAnimalByDefault();
 					system("cls");
 					NextLevelScreen();
+					NextLevel = true;
 					PEOPLE = tmp;
 				}
-
+				return true;
 			}
 		}
 		else if (c == 'A'||c=='a')
 		{
-			bool checkLeft = PEOPLE.GoLeft();//creating bool variables just for checking for later problem . People will go to the left 
+			return PEOPLE.GoLeft();//creating bool variables just for checking for later problem . People will go to the left 
 		}
 		else if (c == 'S'||c=='s')
 		{
-			bool checkDown = PEOPLE.GoDown();
+			return PEOPLE.GoDown();
 		}
 		else if (c == 'D'||c=='d')
 		{
-			bool checkRight = PEOPLE.GoRight();
+			return PEOPLE.GoRight();
 		}
 	}
 	void updatePosVehicle()//OK
