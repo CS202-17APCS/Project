@@ -30,7 +30,8 @@ public:
 		getPeopleByDefault();
 		getVehicleByDefault();
 		getAnimalByDefault();
-		CurFloor = 1;
+		getLIGHT();
+		//CurFloor = 1;
 		bool impact = false;
 		CPEOPLE tmp = PEOPLE;
 		CPEOPLE tmp1;
@@ -78,7 +79,15 @@ public:
 		FinishGames();
 		system("pause>nil");*/
 	}
-
+	bool checkCollide()
+	{
+		if (CurFloor == 0)
+			return false;
+		if (CurFloor % 2 == 0)
+			return  PEOPLE.imPact(VE[CurFloor]);
+		else
+			return PEOPLE.isImpact(ANI[CurFloor]);
+	}
 	bool checkNextLevel()
 	{
 		return NextLevel;
@@ -110,12 +119,23 @@ public:
 			{
 				lock_guard<mutex> lock(m);
 				drawHuman();
-				finishDrawingHuman = true;
-
 				NotFlickeringPeople(OldPos, CurrentPos);//Set People to that OldPos, Drawing Space People at that postion and then update OldPos to CurrentPos
+				if (checkCollide())
+				{
+					GameOver();
+				}
 			}
+			
 		}
+		finishDrawingHuman = true;
 		return NextLevel;
+	}
+	void GameOver()
+	{
+		system("cls");
+		cout << "Game Over";
+		Sleep(10000000);
+		system("pause");
 	}
 	void NotFlickeringPeople(CPEOPLE &OldPos, CPEOPLE&CurrentPos)
 	{
@@ -258,7 +278,7 @@ public:
 	void getVehicleFile();//load game
 	void getPeopleByDefault()//New game(OK)
 	{
-		PEOPLE = CPEOPLE(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 1);//please change the coordinate of people
+		PEOPLE = CPEOPLE(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 0);//please change the coordinate of people
 	}
 	void getVehicleByDefault()//New game(OK)
 	{
@@ -272,7 +292,7 @@ public:
 			VE[i].clear();
 			for (int j = 0; j < Curlevel; j++)
 			{
-				CVEHICLE *tmp = new CCAR(startHeight - 1, startHeight + 2, startPos, startPos + LengthVe, i + 1);
+				CVEHICLE *tmp = new CCAR(startHeight - 1, startHeight + 2, startPos, startPos + LengthVe, i);
 				VE[i].push_back(tmp);
 				//delete tmp;
 				startPos = startPos + LengthVe + Distance;//startpos+=distance
@@ -282,8 +302,19 @@ public:
 			startHeight -= LengthBetweenRows;
 		}
 	}
+	//Logic game
+	//Level 1:1 VE 1 ANI
+	//Level 2 :2 VE 2 ANI
+	//Level 3:3 VE 2 ANI
+	//Level 4:4 VE 3 ANI
+	//Level 5:5 VE 3 Ani
 	void getAnimalByDefault()//New game(OK)
 	{
+		int tmp = Curlevel;
+		if (Curlevel == 3)
+			Curlevel--;
+		if (Curlevel == 4 || Curlevel == 5)
+			Curlevel = 3;
 		int Distance = (RightEdge - LeftEdge - Curlevel * LengthAni) / Curlevel;
 		if (Curlevel != 1)
 			Distance = (RightEdge - LeftEdge - Curlevel * LengthAni) / (Curlevel - 1);
@@ -294,7 +325,7 @@ public:
 			ANI[i].clear();
 			for (int j = 0; j < Curlevel; j++)
 			{
-				CANIMAL *tmp = new CBIRD(startHeight - 1, startHeight + 2, startPos - LengthAni, startPos, i + 1);
+				CANIMAL *tmp = new CBIRD(startHeight - 1, startHeight + 2, startPos - LengthAni, startPos, i);
 				ANI[i].push_back(tmp);
 				//delete tmp;
 				startPos = startPos - LengthAni - Distance;//startpos+=distance
@@ -303,6 +334,7 @@ public:
 			}
 			startHeight -= LengthBetweenRows;
 		}
+		Curlevel = tmp;
 	}
 	void resetGame()
 	{
@@ -355,16 +387,18 @@ public:
 
 	void clearScreenAndCreateNewLevel() {
 		Curlevel++;
-		if (Curlevel == 4)
+		if (Curlevel == 6)
 			Curlevel = 1;
 		CurFloor = 0;
-		CPEOPLE tmp(PEOPLE, YCorOfHuman - 1, YCorOfHuman + 2);
+		getPeopleByDefault();//new
+		//CPEOPLE tmp(PEOPLE, YCorOfHuman - 1, YCorOfHuman + 2,CurFloor); old
 		getVehicleByDefault();
 		getAnimalByDefault();
+		getLIGHT();
 		system("cls");
 		NextLevelScreen();
 		DrawingLanes(true);
-		PEOPLE = tmp;
+		//PEOPLE = tmp; old
 	}
 
 
@@ -383,6 +417,8 @@ public:
 					//Go to next level
 					NextLevel = true;
 				}
+				else
+					CurFloor++;
 				return true;
 			}
 		}
@@ -392,6 +428,8 @@ public:
 		}
 		else if (c == 'S' || c == 's')
 		{
+			if (CurFloor != 0)
+				CurFloor--;
 			return PEOPLE.GoDown();
 		}
 		else if (c == 'D' || c == 'd')
@@ -404,7 +442,7 @@ public:
 		int startHeight = YCorOfAni;
 		for (int i = 2; i <= maxfloorsForVe; i += 2)
 		{
-			if (LIGHT[i].OnGreen() == false)
+			if (LIGHT[i].OnGreen())
 			{
 				for (int j = 0; j < VE[i].size(); j++)
 				{

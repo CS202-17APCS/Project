@@ -13,7 +13,7 @@ public:
 	CPEOPLE(int up, int down, int left, int right, int tmpfloor) :CObject(up, down, left, right, tmpfloor) {
 		mState = false;
 	}
-	CPEOPLE(const CPEOPLE&tmp,int up, int down) :CObject(tmp,up, down) {
+	CPEOPLE(const CPEOPLE&tmp,int up, int down,int floor) :CObject(tmp,up, down,floor) {
 		mState = false;
 	}
 	CPEOPLE(int left, int right,int LR) :CObject(right, left,LR)

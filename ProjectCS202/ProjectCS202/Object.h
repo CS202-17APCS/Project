@@ -10,12 +10,13 @@ private:
 	int Curfloor;//Current floor of Object
 public:
 	CObject() = default;
-	CObject(const CObject&tmp,int up, int down)
+	CObject(const CObject&tmp,int up, int down,int floor)
 	{
 		SetRight = tmp.SetRight;
 		SetLeft = tmp.SetLeft;
 		SetUp = up;
 		SetDown = down;
+		Curfloor = floor;
 	}
 	CObject(int left, int right,int LR)//to specify which function of 2 parameters will run
 	{
@@ -36,10 +37,17 @@ public:
 	}
 	virtual bool GoUp()//Return true when people can go up and false...
 	{
-		if (SetUp-LengthBetweenOb>=1)
+		if (SetUp == 41)
 		{
-			SetUp -= LengthBetweenOb;
-			SetDown -= LengthBetweenOb;
+			SetUp -= LengthFirstRow;
+			SetDown -= LengthFirstRow;
+			Curfloor++;
+			return true;
+		}
+		if (SetUp-LengthBetweenOb1>=1)
+		{
+			SetUp -= LengthBetweenOb1;
+			SetDown -= LengthBetweenOb1;
 			Curfloor++;
 			return true;
 		}
@@ -47,10 +55,17 @@ public:
 	}
 	virtual bool GoDown()
 	{
-		if (SetUp+LengthBetweenOb<=37)
+		if (SetUp == 37)
 		{
-			SetUp += LengthBetweenOb;
-			SetDown += LengthBetweenOb;
+			SetUp += LengthFirstRow;
+			SetDown += LengthFirstRow;
+			Curfloor--;
+			return true;
+		}
+		if (SetUp+LengthBetweenOb1<=37)
+		{
+			SetUp += LengthBetweenOb1;
+			SetDown += LengthBetweenOb1;
 			Curfloor--;
 			return true;
 		}
@@ -78,9 +93,9 @@ public:
 	}
 	virtual bool isCollide(const CObject &tmp)
 	{
-		if (tmp.SetRight < SetLeft)
+		if (tmp.SetRight <= SetLeft)
 			return false;
-		if (tmp.SetLeft > SetRight)
+		if (tmp.SetLeft >= SetRight)
 			return false;
 		return true;
 	}
