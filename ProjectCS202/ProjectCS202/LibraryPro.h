@@ -2,6 +2,7 @@
 #define _LibraryPro_
 #include <vector>
 #include <string>
+#include <deque>
 #include <conio.h>
 #include <iostream>
 #include <Windows.h>
@@ -40,4 +41,6 @@ const int LengthFirstRow = 4;
 const int Step = 5;
 const int Stop = 6;
 const int Lightcor = 26;
+const int YCorForAm = 30;
+const int XCorForAm = LeftEdge;
 #endif

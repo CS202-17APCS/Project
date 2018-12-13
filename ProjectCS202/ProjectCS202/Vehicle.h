@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Drawing.h"
 class CVEHICLE :public CObject {
 public:
 	CVEHICLE(int up, int down, int left, int right, int tmpfloor) :CObject(up, down, left, right, tmpfloor) {
@@ -94,4 +95,31 @@ public:
 	}
 private:
 	void DCAR();//drawing car
+};
+class CAmbu 
+{
+public:
+	CAmbu()
+	{
+		xcor = LeftEdge;
+		ycor = 35;
+	}
+	bool checkDone()
+	{
+		xcor += 5;
+		drawAmbuCar(xcor, ycor);
+		move_ambucar_by5(xcor - 5, ycor);
+		Sleep(100);
+		if (xcor + 16 > RightEdge)
+			return true;
+		else return false;
+		//play sound here
+	}
+	void updatePosAm()
+	{
+		xcor += 5;
+	}
+private:
+	int xcor;
+	int ycor;
 };

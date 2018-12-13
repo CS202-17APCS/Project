@@ -18,6 +18,9 @@ void drawGreenLight(int ycor);
 void drawGreenLight(int ycor);
 void drawRedLight(int ycor);
 void drawAmbuCar(int x, int y);
+void move_ambucar_by5(int x, int y);
+void menu();
+void cls();
 
 
 

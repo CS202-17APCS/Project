@@ -1,5 +1,41 @@
 #include "Drawing.h"
 #include "LibraryPro.h"
+void cls()
+{
+	HANDLE hStdOut;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	DWORD count;
+	DWORD cellCount;
+	COORD homeCoords = { 0, 0 };
+
+	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hStdOut == INVALID_HANDLE_VALUE) return;
+
+	/* Get the number of cells in the current buffer */
+	if (!GetConsoleScreenBufferInfo(hStdOut, &csbi)) return;
+	cellCount = csbi.dwSize.X *csbi.dwSize.Y;
+
+	/* Fill the entire buffer with spaces */
+	if (!FillConsoleOutputCharacter(
+		hStdOut,
+		(TCHAR) ' ',
+		cellCount,
+		homeCoords,
+		&count
+	)) return;
+
+	/* Fill the entire buffer with the current colors and attributes */
+	if (!FillConsoleOutputAttribute(
+		hStdOut,
+		csbi.wAttributes,
+		cellCount,
+		homeCoords,
+		&count
+	)) return;
+
+	/* Move the cursor home */
+	SetConsoleCursorPosition(hStdOut, homeCoords);
+}
 void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -409,6 +445,102 @@ void draw_reverse_dog(int x, int y, int color)
 	gotoxy(x - 9, y); cout << a;
 
 }
+void menu()
+{
+	string menu[4] = { "Start game", "Load game", "Settings","Exit" };
+	int pointer = 0;
+	while (true)
+	{
+		cls();
+		gotoxy(65, 2);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+		cout << "  ######  ########   #######   ######   ######  ##    ##    ########   #######     ###    ########" << endl;
+		gotoxy(65, 3);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+		cout << " ##    ## ##     ## ##     ## ##    ## ##    ##  ##  ##     ##     ## ##     ##   ## ##   ##     ##" << endl;
+		gotoxy(65, 4);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+		cout << " ##       ##     ## ##     ## ##       ##         ####      ##     ## ##     ##  ##   ##  ##     ##" << endl;
+		gotoxy(65, 5);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+		cout << " ##       ########  ##     ##  ######   ######     ##       ########  ##     ## ##     ## ##     ##" << endl;
+		gotoxy(65, 6);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
+		cout << " ##       ##   ##   ##     ##       ##       ##    ##       ##   ##   ##     ## ######### ##     ##" << endl;
+		gotoxy(65, 7);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
+		cout << " ##    ## ##    ##  ##     ## ##    ## ##    ##    ##       ##    ##  ##     ## ##     ## ##     ##" << endl;
+		gotoxy(65, 8);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+		cout << "  ######  ##     ##  #######   ######   ######     ##       ##     ##  #######  ##     ## ########" << endl;
+		gotoxy(100, 20);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+		for (int i = 0; i < 4; ++i)
+		{
+			gotoxy(100, 20 + i);
+			if (i == pointer)
+			{
+
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+				cout << menu[i] << endl;
+			}
+			else
+			{
+				//gotoxy(100, 21);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
+				cout << menu[i] << endl;
+			}
+		}
+
+		while (true)
+		{
+			if (GetAsyncKeyState(VK_UP) != 0)
+			{
+				pointer -= 1;
+				if (pointer == -1)
+					pointer = 3;
+				break;
+			}
+			else if (GetAsyncKeyState(VK_DOWN) != 0)
+			{
+				pointer += 1;
+				if (pointer == 4)
+					pointer = 0;
+				break;
+			}
+			else if (GetAsyncKeyState(VK_RETURN) != 0)
+			{
+				switch (pointer)
+				{
+				case 0:
+				{
+					cls();
+					cout << "code for new game";
+					Sleep(1000);
+				}break;
+				case 1:
+				{
+					cls();
+					cout << "code for load game";
+					Sleep(1000);
+				}break;
+				case 2:
+				{
+					cls();
+					cout << "code for settings";
+					Sleep(1000);
+				}
+				case 3:
+				{
+					return;
+				}break;
+				}
+				break;
+			}
+			Sleep(500);
+		}
+	}
+}
 void draw_reverse_dogSpace(int x, int y, int color)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
@@ -454,4 +586,62 @@ void draw_reverse_dogSpace(int x, int y, int color)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
 	gotoxy(x - 9, y); cout << a;
 
+}
+void drawAmbuCarSpace(int x, int y, int color)
+{
+	//int color = rand() % 2 + 12;
+	char a = ' ', b = ' ', c = ' ';
+	gotoxy(x, y + 1);
+	// dai 16, cao 4
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+	for (int i = 0; i < 12; ++i) {
+		for (int j = -1; j < 4; ++j) {
+			if (j == -1) {
+				gotoxy(i + x, j + y); cout << b;
+			}
+			else {
+				gotoxy(i + x, j + y); cout << a;
+			}
+		}
+	}
+	for (int i = 0; i < 12; ++i) {
+		gotoxy(i + x, y + 3); cout << c;
+	}
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+	gotoxy(x + 5, y); cout << a;
+	gotoxy(x + 6, y); cout << a;
+	for (int i = 3; i <= 8; ++i) {
+		gotoxy(x + i, y + 1); cout << a;
+	}
+	gotoxy(x + 5, y + 2); cout << a;
+	gotoxy(x + 6, y + 2); cout << a;
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+	gotoxy(x + 1, y + 3); cout << a;
+	gotoxy(x + 2, y + 3); cout << a;
+
+	gotoxy(x + 9, y + 3); cout << a;
+	gotoxy(x + 10, y + 3); cout << a;
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+	gotoxy(x + 12, y + 1); cout << a;
+	gotoxy(x + 12, y + 2); cout << a;
+	gotoxy(x + 13, y + 1); cout << a;
+	gotoxy(x + 13, y + 2); cout << a;
+	gotoxy(x + 12, y + 3); cout << a;
+	gotoxy(x + 13, y + 3); cout << a;
+	gotoxy(x + 12, y + 3); cout << c;
+	gotoxy(x + 13, y + 3); cout << c;
+}
+void move_ambucar_by5(int x, int y)
+{
+	for (int i = x; i < x + 5; ++i)
+	{
+		for (int j = y - 1; j < y + 4; ++j)
+		{
+			gotoxy(i, j);
+			cout << " ";
+		}
+	}
 }

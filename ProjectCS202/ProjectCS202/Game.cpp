@@ -22,7 +22,8 @@ void drawAndUpdate(future<void> futureObj) {
 		mygame.drawAni();
 		if (mygame.checkCollide())
 		{
-			mygame.GameOver();
+			Sleep(1000);
+			mygame.callAmBulance();
 		}
 		mygame.updatePosAnimal();
 		mygame.updatePosVehicle();

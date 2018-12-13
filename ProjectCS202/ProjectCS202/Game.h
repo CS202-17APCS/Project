@@ -21,9 +21,6 @@ class CGAME {
 	int CurFloor;
 	bool NextLevel = false;
 public:
-
-
-
 	CGAME()
 	{
 		Curlevel = 1;// Set Number Of Vehicle Here
@@ -79,6 +76,18 @@ public:
 		FinishGames();
 		system("pause>nil");*/
 	}
+	void callAmBulance()
+	{
+		system("cls");
+		CAmbu myAmbu;
+		while (myAmbu.checkDone() == false)
+		{
+			//
+		}
+		gotoxy(75, 25);
+		cout << "Game Over";
+		Sleep(100000000000);
+	}
 	bool checkCollide()
 	{
 		if (CurFloor == 0)
@@ -122,7 +131,8 @@ public:
 				NotFlickeringPeople(OldPos, CurrentPos);//Set People to that OldPos, Drawing Space People at that postion and then update OldPos to CurrentPos
 				if (checkCollide())
 				{
-					GameOver();
+					Sleep(1000);
+					callAmBulance();
 				}
 			}
 			
