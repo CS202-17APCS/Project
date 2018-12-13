@@ -5,41 +5,49 @@
 #include "People.h"
 #include "Drawing.h"
 #include "CTRAFFICLIGHT.h"
+#include <thread>
+#include <future>
+#include <chrono>
+#include <mutex>
+
 class CGAME {
-	vector<CVEHICLE*> VE[100];
-	vector<CANIMAL*> ANI[100];
+
+
+	vector<CVEHICLE*> VE[10];
+	vector<CANIMAL*> ANI[10];
 	CLIGHT LIGHT[100];
 	CPEOPLE PEOPLE;
-	int Curlevel;//6 levels for a game
+	int Curlevel; //6 levels for a game
 	int CurFloor;
 	bool NextLevel = false;
 public:
+
+
+
 	CGAME()
 	{
-		drawAmbuCar(80, 15);
-		/*Curlevel = 4;// Set Number Of Vehicle Here
+		Curlevel = 1;// Set Number Of Vehicle Here
 		getPeopleByDefault();
 		getVehicleByDefault();
 		getAnimalByDefault();
-		getLIGHT();
 		CurFloor = 1;
-		bool impact=false;
-		CPEOPLE tmp=PEOPLE;
+		bool impact = false;
+		CPEOPLE tmp = PEOPLE;
 		CPEOPLE tmp1;
+		drawHuman();
 		DrawingLanes(true);
-		while(true)
-		{ 
-			DrawingLanes(false);
+		/*while(true)
+		{
+			//DrawingLanes(false);
 			drawAni();
 			drawVe();
 			drawHuman();
-			CountLevel();
-			//NotFlickeringPeople(tmp, tmp1);
+			NotFlickeringPeople(tmp, tmp1);
 			updatePosVehicle();
 			updatePosAnimal();
-			//updatePosPeople('W',NextLevel);
-			Sleep(10);
-			//check collide
+			updatePosPeople('W');
+			Sleep(1000);
+			//Check collide
 			/*if (CurFloor % 2 == 0)
 				impact = PEOPLE.imPact(VE[CurFloor]);
 			else
@@ -48,9 +56,9 @@ public:
 			if (impact)
 			{
 				break;
-			}*/
-		//}
-		system("pause>nil");
+			}
+		}*/
+		//system("pause>nil");
 		/*drawHuman();
 		while (true)
 		{
@@ -79,25 +87,32 @@ public:
 	{
 		NextLevel = false;
 	}
+
 	void getLIGHT()// default light
 	{
-		LIGHT[2] = CLIGHT(Stop+100);
+		LIGHT[2] = CLIGHT(Stop + 100);
 		LIGHT[4] = CLIGHT(Stop);
-		LIGHT[6] = CLIGHT(Stop+200);
+		LIGHT[6] = CLIGHT(Stop + 200);
 	}
-	bool Handle()
+
+
+	bool Handle(bool& finishDrawingHuman, condition_variable& cv, mutex& m)
 	{
 		CPEOPLE OldPos = PEOPLE;//Old Position of PEOPLE
 		CPEOPLE CurrentPos;//Current Postition of PEOPLE
+
 		char c = _getch();
-	//	drawHuman();
+		finishDrawingHuman = false;
+		cv.notify_one();
 		if (c == 'W' || c == 'A' || c == 'D' || c == 'S' || c == 'w' || c == 'a' || c == 's' || c == 'd')
 		{
 			if (updatePosPeople(c, NextLevel))
 			{
+				lock_guard<mutex> lock(m);
 				drawHuman();
+				finishDrawingHuman = true;
+
 				NotFlickeringPeople(OldPos, CurrentPos);//Set People to that OldPos, Drawing Space People at that postion and then update OldPos to CurrentPos
-			//	Sleep(100);
 			}
 		}
 		return NextLevel;
@@ -122,14 +137,15 @@ public:
 				gotoxy(j, i);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 56);
 				cout << a;
-				if(check==true)
-				 Sleep(1);
+				if (check == true)
+					Sleep(1);
 			}
 			if (i == 6)
 				k = 7;
 		}
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 	}
+
 	void NextLevelScreen()
 	{
 		gotoxy(53, 18);
@@ -166,9 +182,9 @@ public:
 	}
 	void drawAni()//OK
 	{
-		int xcor=0, ycor=0;
+		int xcor = 0, ycor = 0;
 		bool check;
-		for (int i = 1; i <=maxfloorsForAni; i+=2)
+		for (int i = 1; i <= maxfloorsForAni; i += 2)
 		{
 			for (int j = 0; j < ANI[i].size(); j++)
 			{
@@ -180,15 +196,15 @@ public:
 					//draw_reverse_dog(xcor, ycor, 14);
 				}
 				else
-					draw_reverse_dogSpace(xcor+10, ycor, 14);
+					draw_reverse_dogSpace(xcor + 10, ycor, 14);
 			}
 		}
 	}
 	void drawVe()//OK
 	{
-		int VeCor=28;
+		int VeCor = 28;
 		int xcor = 0, ycor = 0;
-		for (int i = 2; i <=maxfloorsForVe; i+=2)
+		for (int i = 2; i <= maxfloorsForVe; i += 2)
 		{
 			if (LIGHT[i].OnGreen())
 			{
@@ -204,17 +220,11 @@ public:
 					else
 						drawcarSpace(xcor, ycor, 15);
 				}
-				drawGreenLight(VeCor - (i/2-1)*LengthBetweenRows);
+				drawGreenLight(VeCor - (i / 2 - 1)*LengthBetweenRows);
 			}
 			else
-				drawRedLight(VeCor - (i/2-1)*LengthBetweenRows);
+				drawRedLight(VeCor - (i / 2 - 1)*LengthBetweenRows);
 		}
-	}
-	void CountLevel()
-	{
-		gotoxy(0, 1);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-		cout << "Level " << Curlevel;
 	}
 	void drawHuman()//OK
 	{
@@ -248,23 +258,24 @@ public:
 	void getVehicleFile();//load game
 	void getPeopleByDefault()//New game(OK)
 	{
-		PEOPLE=CPEOPLE(YCorOfHuman-1, YCorOfHuman+2,XCorOfHuman-1 , XCorOfHuman+2,1);//please change the coordinate of people
+		PEOPLE = CPEOPLE(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 1);//please change the coordinate of people
 	}
 	void getVehicleByDefault()//New game(OK)
 	{
-		int Distance = (RightEdge - LeftEdge - Curlevel * LengthVe) / Curlevel ;
+		int Distance = (RightEdge - LeftEdge - Curlevel * LengthVe) / Curlevel;
 		if (Curlevel != 1)
 			Distance = (RightEdge - LeftEdge - Curlevel * LengthVe) / (Curlevel - 1);
 		int startHeight = YCorOfVe;
-		for (int i = 2; i <= maxfloorsForVe; i+=2)
+		for (int i = 2; i <= maxfloorsForVe; i += 2)
 		{
 			int startPos = LeftEdge;
-			for(int j=0;j<Curlevel;j++)
+			VE[i].clear();
+			for (int j = 0; j < Curlevel; j++)
 			{
-				CVEHICLE *tmp = new CCAR(startHeight-1, startHeight+2, startPos, startPos + LengthVe,i+1);
+				CVEHICLE *tmp = new CCAR(startHeight - 1, startHeight + 2, startPos, startPos + LengthVe, i + 1);
 				VE[i].push_back(tmp);
 				//delete tmp;
-				startPos =startPos+LengthVe+Distance;//startpos+=distance
+				startPos = startPos + LengthVe + Distance;//startpos+=distance
 				if (startPos >= RightEdge)
 					break;
 			}
@@ -280,9 +291,10 @@ public:
 		for (int i = 1; i <= maxfloorsForAni; i += 2)
 		{
 			int startPos = RightEdge;
-			for (int j = 0; j<Curlevel; j++)
+			ANI[i].clear();
+			for (int j = 0; j < Curlevel; j++)
 			{
-				CANIMAL *tmp = new CBIRD(startHeight-1, startHeight+2, startPos-LengthAni, startPos,i+1);
+				CANIMAL *tmp = new CBIRD(startHeight - 1, startHeight + 2, startPos - LengthAni, startPos, i + 1);
 				ANI[i].push_back(tmp);
 				//delete tmp;
 				startPos = startPos - LengthAni - Distance;//startpos+=distance
@@ -304,7 +316,7 @@ public:
 		getPeopleByDefault();
 		getAnimalByDefault();
 		getVehicleByDefault();
-	    //drawing game
+		//drawing game
 	}
 	void loadGame(istream);
 	void saveGame(istream);
@@ -339,9 +351,26 @@ public:
 			}
 		}
 	}
-	bool updatePosPeople(char c,bool &NextLevel)//OK
+
+
+	void clearScreenAndCreateNewLevel() {
+		Curlevel++;
+		if (Curlevel == 4)
+			Curlevel = 1;
+		CurFloor = 0;
+		CPEOPLE tmp(PEOPLE, YCorOfHuman - 1, YCorOfHuman + 2);
+		getVehicleByDefault();
+		getAnimalByDefault();
+		system("cls");
+		NextLevelScreen();
+		DrawingLanes(true);
+		PEOPLE = tmp;
+	}
+
+
+	bool updatePosPeople(char c, bool &NextLevel)//OK
 	{
-		if (c == 'W'||c=='w')
+		if (c == 'W' || c == 'w')
 		{
 			if (Curlevel == 6)
 			{
@@ -352,28 +381,20 @@ public:
 				if (PEOPLE.GoUp() == false)//Standing on the maximum floor ,checking by using Coordinates
 				{
 					//Go to next level
-					Curlevel++;
-					CurFloor = 0;
-					CPEOPLE tmp(PEOPLE,YCorOfHuman - 1, YCorOfHuman + 2);
-					getVehicleByDefault();
-					getAnimalByDefault();
-					system("cls");
-					NextLevelScreen();
 					NextLevel = true;
-					PEOPLE = tmp;
 				}
 				return true;
 			}
 		}
-		else if (c == 'A'||c=='a')
+		else if (c == 'A' || c == 'a')
 		{
 			return PEOPLE.GoLeft();//creating bool variables just for checking for later problem . People will go to the left 
 		}
-		else if (c == 'S'||c=='s')
+		else if (c == 'S' || c == 's')
 		{
 			return PEOPLE.GoDown();
 		}
-		else if (c == 'D'||c=='d')
+		else if (c == 'D' || c == 'd')
 		{
 			return PEOPLE.GoRight();
 		}
@@ -383,7 +404,7 @@ public:
 		int startHeight = YCorOfAni;
 		for (int i = 2; i <= maxfloorsForVe; i += 2)
 		{
-			if (LIGHT[i].OnGreen())
+			if (LIGHT[i].OnGreen() == false)
 			{
 				for (int j = 0; j < VE[i].size(); j++)
 				{
