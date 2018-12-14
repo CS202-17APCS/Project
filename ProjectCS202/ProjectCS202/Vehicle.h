@@ -1,3 +1,5 @@
+#ifndef _Vehicle_
+#define _Vehicle_
 #include "Object.h"
 #include "Drawing.h"
 class CVEHICLE :public CObject {
@@ -123,3 +125,4 @@ private:
 	int xcor;
 	int ycor;
 };
+#endif

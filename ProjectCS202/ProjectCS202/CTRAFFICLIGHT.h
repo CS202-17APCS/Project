@@ -1,3 +1,5 @@
+#ifndef _CTRAFFICLIGHT_
+#define _CTRAFFICLIGHT_
 #include "Object.h"
 class CLIGHT
 {
@@ -39,3 +41,4 @@ private:
 	int TG;//Time settings for green duration
 	int Counttime;
 };
+#endif

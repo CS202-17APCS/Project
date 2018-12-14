@@ -63,6 +63,10 @@ public:
 		x += 1;
 		y += 1;
 	}
+	void gotoXY(int x, int y)
+	{
+		
+	}
 };
 #endif
 

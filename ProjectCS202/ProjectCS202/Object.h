@@ -1,5 +1,6 @@
 #ifndef _Object_
 #define _Object_
+#include "fstream"
 using namespace std;
 class CObject {
 private:
@@ -136,5 +137,13 @@ public:
 			SetRight -= Step;
 		}
 	}
+	friend void saveToFile(ofstream& fout, CObject&object);
 };
+void saveToFile(ofstream& fout, CObject& object)
+{
+	fout.write((char*)&object.SetLeft, sizeof(object.SetLeft));
+	fout.write((char*)&object.SetUp, sizeof(object.SetUp));
+	fout.write((char*)&object.SetRight, sizeof(object.SetRight));
+	fout.write((char*)&object.SetDown, sizeof(object.SetDown));
+}
 #endif

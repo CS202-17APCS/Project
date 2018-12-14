@@ -1,3 +1,5 @@
+#ifndef _Animal_
+#define _Animal_
 #include "Object.h"
 #include <string>
 const string CDINOSAUR_SOUND_FILE = "sounds/dinosaur0.wav";
@@ -105,3 +107,4 @@ public:
 private:
 	void DBIRD();//drawing BIRD
 };
+#endif

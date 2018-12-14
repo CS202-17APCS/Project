@@ -43,4 +43,10 @@ const int Stop = 6;
 const int Lightcor = 26;
 const int YCorForAm = 30;
 const int XCorForAm = LeftEdge;
+const int NextLevelStatus = 1;
+const int NormalStatus = 2;
+const int LoadStatus = 3;
+const int SaveStatus = 4;
+const int NewGameStatus = 5;
+const int RunningGameStatus = 6;
 #endif

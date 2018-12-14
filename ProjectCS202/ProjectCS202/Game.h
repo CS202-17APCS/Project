@@ -15,7 +15,7 @@ class CGAME {
 
 	vector<CVEHICLE*> VE[10];
 	vector<CANIMAL*> ANI[10];
-	CLIGHT LIGHT[100];
+	CLIGHT LIGHT[10];
 	CPEOPLE PEOPLE;
 	int Curlevel; //6 levels for a game
 	int CurFloor;
@@ -32,8 +32,8 @@ public:
 		bool impact = false;
 		CPEOPLE tmp = PEOPLE;
 		CPEOPLE tmp1;
-		drawHuman();
-		DrawingLanes(true);
+		//drawHuman();
+		//DrawingLanes(true);
 		/*while(true)
 		{
 			//DrawingLanes(false);
@@ -76,17 +76,29 @@ public:
 		FinishGames();
 		system("pause>nil");*/
 	}
-	void callAmBulance()
+	void saveAnimals(ofstream&fout)
 	{
-		system("cls");
-		CAmbu myAmbu;
-		while (myAmbu.checkDone() == false)
+		for (int i = 0; i < 10; i++)
 		{
-			//
+			int size = ANI[i].size();
+			fout.write((char*)&size, sizeof(int));
+			for (int j = 0; j < size; j++)
+			{
+				saveToFile(fout, *ANI[i][j]);
+			}
 		}
-		gotoxy(75, 25);
-		cout << "Game Over";
-		Sleep(100000000000);
+	}
+	void saveVehicles(ofstream&fout)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			int size = VE[i].size();
+			fout.write((char*)&size, sizeof(int));
+			for (int j = 0; j < size; j++)
+			{
+				saveToFile(fout, *VE[i][j]);
+			}
+		}
 	}
 	bool checkCollide()
 	{
@@ -113,12 +125,10 @@ public:
 		LIGHT[6] = CLIGHT(Stop + 200);
 	}
 
-
-	bool Handle(bool& finishDrawingHuman, condition_variable& cv, mutex& m)
+	int Handle(bool& finishDrawingHuman, condition_variable& cv, mutex& m)
 	{
 		CPEOPLE OldPos = PEOPLE;//Old Position of PEOPLE
 		CPEOPLE CurrentPos;//Current Postition of PEOPLE
-
 		char c = _getch();
 		finishDrawingHuman = false;
 		cv.notify_one();
@@ -129,16 +139,59 @@ public:
 				lock_guard<mutex> lock(m);
 				drawHuman();
 				NotFlickeringPeople(OldPos, CurrentPos);//Set People to that OldPos, Drawing Space People at that postion and then update OldPos to CurrentPos
-				if (checkCollide())
-				{
-					Sleep(1000);
-					callAmBulance();
-				}
 			}
-			
+			finishDrawingHuman = true;
+			if (NextLevel)
+				return NextLevelStatus;
+			return NormalStatus;
+		}
+		else if (c == 'O' || c == 'o')
+		{
+			pauseGame();
+			finishDrawingHuman = false;
+			cv.notify_one();
+		}
+		else if (c == 'L' || c == 'l')
+		{
+			//savegame
+			finishDrawingHuman = false;
+			cv.notify_one();
+			ofstream fout("Gameload.bin", ios::binary | ios::trunc);
+			saveGame(fout);
+			fout.close();
+			cls();
+			gotoxy(75, 25);
+			cout << "Saving game...";
+			Sleep(1000);
+			cls();
+			gotoxy(65, 25);
+			cout << "Continued?(1/0)";
+			char ch = _getch();
+			while (ch != '1' &&ch != '0')
+			{
+				cls();
+				gotoxy(75, 25);
+				cout << "Continued?(1/0)";
+				ch = _getch();
+			}
+			if (ch == '0')
+			{
+				//finishDrawingHuman = false;
+				//cv.notify_one();
+				return NewGameStatus;
+			}
+			cls();
+			drawHuman();
+			return NormalStatus;
+		}
+		else if (c == 'T' || c == 't')
+		{
+			//finishDrawingHuman = false;
+			//cv.notify_one();
+			return NewGameStatus;
 		}
 		finishDrawingHuman = true;
-		return NextLevel;
+		return NormalStatus;
 	}
 	void GameOver()
 	{
@@ -283,9 +336,49 @@ public:
 		system("pause>nil");
 	}*/
 	~CGAME() {};
-	void getPeopleFile();//load game
-	void getAnimalFile();//load game
-	void getVehicleFile();//load game
+	void getPeopleFile(ifstream& fin)
+	{
+		int Left,Up,Right,Down;
+		fin.read((char*)&Left, sizeof(int));
+		fin.read((char*)&Up, sizeof(int));
+		fin.read((char*)&Right, sizeof(int));
+		fin.read((char*)&Down, sizeof(int));
+		PEOPLE = CPEOPLE(Up,Down,Left,Right,CurFloor);
+	}
+	void getAnimalFile(ifstream& fin)//load game
+	{
+		int Left, Up, Right, Down;
+		for (int i = 0; i < 10; i++)
+		{
+			int size;
+			fin.read((char*)&size, sizeof(int));
+			for (int j = 0; j < size; j++)
+			{
+				fin.read((char*)&Left, sizeof(int));
+				fin.read((char*)&Up, sizeof(int));
+				fin.read((char*)&Right, sizeof(int));
+				fin.read((char*)&Down, sizeof(int));
+				ANI[i][j] = new CANIMAL(Up, Down, Left, Right, CurFloor);
+			}
+		}
+	}
+	void getVehicleFile(ifstream&fin)//load game
+	{
+		int Left, Up, Right, Down;
+		for (int i = 0; i < 10; i++)
+		{
+			int size;
+			fin.read((char*)&size, sizeof(int));
+			for (int j = 0; j < size; j++)
+			{
+				fin.read((char*)&Left, sizeof(int));
+				fin.read((char*)&Up, sizeof(int));
+				fin.read((char*)&Right, sizeof(int));
+				fin.read((char*)&Down, sizeof(int));
+				VE[i][j] = new CVEHICLE(Up, Down, Left, Right, CurFloor);
+			}
+		}
+	}
 	void getPeopleByDefault()//New game(OK)
 	{
 		PEOPLE = CPEOPLE(YCorOfHuman - 1, YCorOfHuman + 2, XCorOfHuman - 1, XCorOfHuman + 2, 0);//please change the coordinate of people
@@ -346,9 +439,16 @@ public:
 		}
 		Curlevel = tmp;
 	}
-	void resetGame()
+	void newGame()
 	{
 		//delete all and set default again
+		Curlevel = 1;
+		CurFloor = 0;
+		getAnimalByDefault();
+		getPeopleByDefault();
+		getVehicleByDefault();
+		DrawingLanes(true);
+		drawHuman();
 	}
 	void exitGame(HANDLE);
 	void startGame()
@@ -360,18 +460,34 @@ public:
 		getVehicleByDefault();
 		//drawing game
 	}
-	void loadGame(istream);
-	void saveGame(istream);
-	void pauseGame(char key)
+	void loadGame(ifstream&fin)
 	{
-		if (key == 'p' || key == 'P')
-			resumeGame();//waiting for user to enter P
+		fin.read((char*)&Curlevel, sizeof(Curlevel));
+		fin.read((char*)&CurFloor, sizeof(CurFloor));
+		getPeopleByDefault();
+		getPeopleFile(fin);
+		getAnimalByDefault();
+		getAnimalFile(fin);
+		getVehicleByDefault();
+		getVehicleFile(fin);
+	}
+	void saveGame(ofstream&fout)
+	{
+		fout.write((char*)&Curlevel, sizeof(Curlevel));
+		fout.write((char*)&CurFloor, sizeof(CurFloor));
+		saveToFile(fout, PEOPLE);
+		saveAnimals(fout);
+		saveVehicles(fout);
+	}
+	void pauseGame()
+	{
+		resumeGame();
 		//After pressing p go on printing out the console
 	}
 	void resumeGame()
 	{
 		char c = _getch();
-		while (c != 'P' &&c != 'p')
+		while (c != 'O' &&c != 'o')
 		{
 			c = _getch();
 		}
@@ -408,6 +524,7 @@ public:
 		system("cls");
 		NextLevelScreen();
 		DrawingLanes(true);
+		drawHuman();
 		//PEOPLE = tmp; old
 	}
 
